@@ -1,0 +1,74 @@
+{
+	"StarBreaker:SpireTheoryBufferPower": {
+		"NAME": "Spire Theory Buffer",
+		"DESCRIPTIONS": [
+			"Absorb all damage this turn and apply them at the end of next turn."
+		]
+	},
+	"StarBreaker:SpireTheoryBufferDelayDmgPower": {
+		"NAME": "Delayed Damage",
+		"DESCRIPTIONS": [
+			"Receive ",
+			" damage at the end of this turn."
+		]
+	},
+	"StarBreaker:KindnessStabsPower": {
+		"NAME": "Kindness Stabs",
+		"DESCRIPTIONS": [
+			"Whenever you receive attack damage from this enemy, add a #yBandageUp into your discard pile."
+		]
+	},
+	"StarBreaker:BloodScalesPower": {
+		"NAME": "Leeching Thorn",
+		"DESCRIPTIONS": [
+			"When you deal damage outside your turn, heal half the damage dealt."
+		]
+	},
+	"StarBreaker:CunningPower": {
+		"NAME": "Cunning",
+		"DESCRIPTIONS": [
+			"Increase the effectiveness of non-attack damage by #b",
+			"."
+		]
+	},
+	"StarBreaker:LoseCunningPower": {
+		"NAME": "LoseCunning",
+		"DESCRIPTIONS": [
+			"At the start of next turn, lose #b",
+			" #yCunning."
+		]
+	},
+
+	"StarBreaker:ThornyRosePower": {
+		"NAME": "Thorny Rose",
+		"DESCRIPTIONS": [
+			"Every time you deal non-attack damage, NL gain equal block. NL Max #b",
+			"."
+		]
+	},
+
+	"StarBreaker:DeepDarkFantasyPower": {
+		"NAME": "DeepDarkFantasy",
+		"DESCRIPTIONS": [
+			"Every time you apply debuff to an enemy, NL gain #b",
+			" block. Gain #b",
+			" more block each time triggered."
+		]
+	},
+
+	"StarBreaker:YouLikeThatPower": {
+		"NAME": "You Like That, Ah?",
+		"DESCRIPTIONS": [
+			"Every time you apply debuff to an enemy, NL gain #b",
+			" max hp. "
+		]
+	},
+
+	"StarBreaker:ClashMasteryPower": {
+		"NAME": "Clash Mastery",
+		"DESCRIPTIONS": [
+			"Clash offers #b",
+			" percent lifesteal."
+		]
+	}
+}

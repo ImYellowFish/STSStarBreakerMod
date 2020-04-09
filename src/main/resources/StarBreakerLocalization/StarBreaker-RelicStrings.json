@@ -1,0 +1,97 @@
+ {
+ 	"StarBreaker:TestRelic": {
+	    "NAME": "TestRelic",
+	    "FLAVOR": "This is a test flavor text.",
+	    "DESCRIPTIONS": [
+	      "This is description 00 ",
+	      " and this is description 01"
+	    ]
+  	},
+
+	 "StarBreaker:BloodScales": {
+		 "NAME": "BloodScales",
+		 "FLAVOR": "Revenge brings peace.",
+		 "DESCRIPTIONS": [
+			 "When you deal damage outside your turn, NL heal half the damage dealt. NL No effect for poison."
+		 ]
+	 },
+
+	 "StarBreaker:BloodBoot": {
+		 "NAME": "BloodBoot",
+		 "FLAVOR": "Boot is more useful now.",
+		 "DESCRIPTIONS": [
+			 "Whenever you would deal #b",
+			 " or less unblocked attack damage, heal the same amount."
+		 ]
+	 },
+
+	 "StarBreaker:SpireTheoryGamblingChip": {
+		 "NAME": "SpireTheoryGamblingChip",
+		 "FLAVOR": "Order of cards changes the tide of battle.",
+		 "DESCRIPTIONS": [
+			 "Adjust the order of cards in your hand. NL Right click to use."
+		 ]
+	 },
+
+	 "StarBreaker:SpireTheoryAbacus": {
+		 "NAME": "SpireTheoryAbacus",
+		 "FLAVOR": "Fate lies in your own hand.",
+		 "DESCRIPTIONS": [
+			 "Changes the card RNG and potion RNG. NL Right click to use. NL Can use five times per battle."
+		 ]
+	 },
+
+	 "StarBreaker:SpireTheoryEye": {
+		 "NAME": "SpireTheoryEye",
+		 "FLAVOR": "When you see the future, the future already changes.",
+		 "DESCRIPTIONS": [
+			 "Predict the future.",
+			 "Success.",
+			 "Exhaust."
+		 ]
+	 },
+
+	 "StarBreaker:DarkVanArmor": {
+		 "NAME": "DarkVanArmor",
+		 "FLAVOR": "Deep Dark Fantasy.",
+		 "DESCRIPTIONS": [
+			 "Every time you apply debuff to an enemy, NL gain #b",
+			 " block. Gain #b",
+			 " more block each time triggered."
+		 ]
+	 },
+
+	 "StarBreaker:VampireMask": {
+		 "NAME": "Stone Mask",
+		 "FLAVOR": "I am throwing away my humanity, Jojo!",
+		 "DESCRIPTIONS": [
+			 "Heal beyond your max health will be transformed into Strength and Focus."
+		 ]
+	 },
+
+	 "StarBreaker:DogStick": {
+		 "NAME": "Dog Stick",
+		 "FLAVOR": "Offense is the best defense.",
+		 "DESCRIPTIONS": [
+			 "Can only trigger when every card in your hand is not Power or Skill. NL Attack gains block equal to half of unblocked damage dealt."
+		 ]
+	 },
+
+	 "StarBreaker:HadesTrialErebusMark": {
+		 "NAME": "Mark of Erebus",
+		 "FLAVOR": "Ha Ha Ha Ha Ha!",
+		 "DESCRIPTIONS": [
+			 "When you are damaged by enemies, remove all rewards.",
+			 "This relic has been used up."
+		 ]
+	 },
+
+	 "StarBreaker:HadesTrialTroveMark": {
+		 "NAME": "Underworld Trove",
+		 "FLAVOR": "A race against time!",
+		 "DESCRIPTIONS": [
+			 "Upon victory, gain #yGold. Decays over time.",
+			 "This relic has been used up."
+		 ]
+	 }
+}

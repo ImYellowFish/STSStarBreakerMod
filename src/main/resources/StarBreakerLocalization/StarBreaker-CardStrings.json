@@ -1,0 +1,38 @@
+{
+	"StarBreaker:SpireTheoryBufferCard": {
+		"NAME": "Spire Theory Buffer",
+		"DESCRIPTION": "Transfer the damage you received this turn to next turn.",
+		"UPGRADE_DESCRIPTION": "Retain. Transfer the damage you received this turn to next turn."
+	},
+	"StarBreaker:SpireTheoryFinaleCard": {
+		"NAME": "Spire Theory Finale",
+		"DESCRIPTION": "Can only be played if this is the 5th card in your hand. NL Deal !D! damage to ALL enemies.",
+		"UPGRADE_DESCRIPTION": "Can only be played if this is the 4th or 5th card in your hand. NL Deal !D! damage to ALL enemies.",
+		"EXTENDED_DESCRIPTION": ["This must be the #r5th card in my hand.", "This must be the #r4th or #r5th card in my hand."]
+	},
+	"StarBreaker:SetThemUpCard": {
+		"NAME": "Set Them Up",
+		"DESCRIPTION": "Gain !M! Cunning. NL At the start of next turn, lose !M! Cunning."
+	},
+	"StarBreaker:ThornyRoseCard": {
+		"NAME": "Thorny Rose",
+		"DESCRIPTION": "Every time you deal non-attack damage, NL Gain equal block capped at !M!."
+	},
+	"StarBreaker:BadJokeCard": {
+		"NAME": "Bad Joke",
+		"DESCRIPTION": "Every enemy deal !D! damage to you. NL Draw !M! cards."
+	},
+	"StarBreaker:KingsEdgeCard": {
+		"NAME": "King's Edge",
+		"DESCRIPTION": "Every time you apply debuff to an enemy, NL gain !M! max hp."
+	},
+	"StarBreaker:BlackMailCard": {
+		"NAME": "Black Mail",
+		"DESCRIPTION": "Steal !M! gold for each stack of debuff on target. NL Exhaust.",
+		"UPGRADE_DESCRIPTION": "Retain. Steal !M! gold for each stack of debuff on target. NL Exhaust."
+	},
+	"StarBreaker:ClashMasteryCard": {
+		"NAME": "Clash Mastery",
+		"DESCRIPTION": "Clash offers !M! percent lifesteal. NL You cannot gain Block from cards."
+	}
+}

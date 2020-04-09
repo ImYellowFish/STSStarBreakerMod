@@ -1,0 +1,13 @@
+{
+	"StarBreaker:SpireTheoryGamblingChipAction": {
+		"TEXT": [
+			"Adjust Order"
+		]
+	},
+
+	"StarBreaker:BlackMailAction": {
+		"TEXT": [
+			"Blackmail"
+		]
+	}
+}

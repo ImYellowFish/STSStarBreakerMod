@@ -1,0 +1,14 @@
+{
+	"StarBreaker:HadesTrialEvent": {
+		"NAME": "Trial from the Underworld",
+		"DESCRIPTIONS": [
+			"You duck into a small hut. Inside, you find what two mysterious portals. Somehow you seem to know where they lead to..."
+		],
+		"OPTIONS": [
+			"[Erebus] Fight without being hit to win powerful rewards",
+			"[Trove] Fight for #g",
+			" #gGold which decays over time",
+			"[Leave]"
+		]
+	}
+}
