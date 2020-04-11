@@ -10,5 +10,20 @@
 			" #gGold which decays over time",
 			"[Leave]"
 		]
+	},
+
+	"StarBreaker:BountyHunterEvent": {
+		"NAME": "Bounty Target Found!",
+		"DESCRIPTIONS": [
+			"You searched the room and found information of a wanted gang's hideout. NL What is your plan?"
+		],
+		"OPTIONS": [
+			"[Just the Story] Sparring for #g"," gold.",
+			"[Sword and Story] Fight for #g"," gold",
+			"[Blood and Broken Bones] A difficult fight. Obtain #g"," gold",
+			"[Death March] An INSANE battle. Obtain #g", "gold",
+			"[Witcher] YOU WILL DIE. Obtain a unique relic",
+			"[Leave]"
+		]
 	}
 }

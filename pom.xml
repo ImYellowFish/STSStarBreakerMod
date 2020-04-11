@@ -1,6 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <groupId>StarBreakerMod</groupId>
     <artifactId>StarBreakerMod</artifactId>
     <version>v1.0.0</version>
@@ -61,7 +65,7 @@
                         <phase>package</phase>
                         <configuration>
                             <target>
-                                <copy file="target/StarBreakerMod.jar" tofile="E:/Steam/steamapps/common/SlayTheSpire/mods/StarBreakerMod.jar"/>
+                                <copy file="target/StarBreakerMod.jar" tofile="E:/Game/Steam/steamapps/common/SlayTheSpire/mods/StarBreakerMod.jar"/>
                             </target>
                         </configuration>
                         <goals>

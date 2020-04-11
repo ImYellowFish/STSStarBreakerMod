@@ -93,5 +93,13 @@
 			 "Upon victory, gain #yGold. Decays over time.",
 			 "This relic has been used up."
 		 ]
+	 },
+
+	 "StarBreaker:BountyHuntersBadge": {
+		 "NAME": "Bounty Hunter's Badge",
+		 "FLAVOR": "The badge is believed to owned by a valiant lady with ashen hair.",
+		 "DESCRIPTIONS": [
+			 "Unlocks bounty hunter's quests. When flashing, right click to use."
+		 ]
 	 }
 }

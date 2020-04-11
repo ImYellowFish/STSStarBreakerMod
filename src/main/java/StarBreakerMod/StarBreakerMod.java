@@ -1,7 +1,9 @@
 package StarBreakerMod;
 
 import StarBreakerMod.cards.*;
+import StarBreakerMod.events.BountyHunterEvent;
 import StarBreakerMod.events.HadesTrialEvent;
+import StarBreakerMod.helpers.StarBreakerSetupHelper;
 import StarBreakerMod.monsters.BookOfNursing;
 import StarBreakerMod.monsters.GayCenturion;
 import StarBreakerMod.relics.*;
@@ -11,11 +13,16 @@ import basemod.interfaces.*;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.dungeons.Exordium;
 import com.megacrit.cardcrawl.dungeons.TheCity;
+import com.megacrit.cardcrawl.dungeons.TheEnding;
 import com.megacrit.cardcrawl.localization.*;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
 import com.megacrit.cardcrawl.monsters.MonsterInfo;
+import com.megacrit.cardcrawl.monsters.city.Byrd;
 import com.megacrit.cardcrawl.monsters.city.Healer;
+import com.megacrit.cardcrawl.monsters.city.Taskmaster;
+import com.megacrit.cardcrawl.monsters.city.TorchHead;
+import com.megacrit.cardcrawl.monsters.exordium.*;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
 import com.megacrit.cardcrawl.unlock.UnlockTracker;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
@@ -106,6 +113,7 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
         BaseMod.addRelic(new DarkVanArmor(), RelicType.SHARED);
         BaseMod.addRelic(new VampireMask(), RelicType.SHARED);
         BaseMod.addRelic(new DogStick(), RelicType.SHARED);
+        BaseMod.addRelic(new BountyHuntersBadge(), RelicType.SHARED);
 
         // Special relics
         BaseMod.addRelic(new HadesTrialErebusMark(), RelicType.SHARED);
@@ -136,11 +144,17 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
                 new GayCenturion(0.0F, 8.0F),
         }));
 
+        // Add special monsters
+        StarBreakerSetupHelper.SetupBountyHunterMonsters();
+
         // Add encounters here
         BaseMod.addEliteEncounter(Exordium.ID, new MonsterInfo(BookOfNursing.ID, 5));
         BaseMod.addStrongMonsterEncounter(TheCity.ID, new MonsterInfo("GayCenturions", 5));
 
         // Add events
         BaseMod.addEvent(HadesTrialEvent.ID, HadesTrialEvent.class);
+
+        // Add special events (will not be randomly generated)
+        BaseMod.addEvent(BountyHunterEvent.ID, BountyHunterEvent.class, "Special");
     }
 }

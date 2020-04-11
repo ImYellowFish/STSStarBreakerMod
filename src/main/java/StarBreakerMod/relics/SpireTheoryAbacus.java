@@ -10,7 +10,7 @@
  import com.megacrit.cardcrawl.powers.AbstractPower;
  import com.megacrit.cardcrawl.relics.AbstractRelic;
 
- public class SpireTheoryAbacus extends CustomRelic implements ClickableRelic {
+ public class SpireTheoryAbacus extends CustomRelic implements ClickableRelic{
      public static final String ID = "StarBreaker:SpireTheoryAbacus";
      // public static final String IMG_PATH = "StarBreakerImages/scrapOoze.png";
     public static final int USE_PER_BATTLE = 5;
