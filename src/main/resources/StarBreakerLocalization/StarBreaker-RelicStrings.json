@@ -8,6 +8,14 @@
 	    ]
   	},
 
+	 "StarBreaker:TestSummonRelic": {
+		 "NAME": "TestSummonRelic",
+		 "FLAVOR": "To test summon ability.",
+		 "DESCRIPTIONS": [
+			 "Right click to use."
+		 ]
+	 },
+
 	 "StarBreaker:BloodScales": {
 		 "NAME": "BloodScales",
 		 "FLAVOR": "Revenge brings peace.",
@@ -99,7 +107,24 @@
 		 "NAME": "Bounty Hunter's Badge",
 		 "FLAVOR": "The badge is believed to owned by a valiant lady with ashen hair.",
 		 "DESCRIPTIONS": [
-			 "Unlocks bounty hunter's quests. When flashing, right click to use."
+			 "Unlocks bounty hunter's quests. When flashing, right click to use.",
+			 "Bounty Hunter's Badge (Lv", ")"
+		 ]
+	 },
+
+	 "StarBreaker:KakaCommanderBadge": {
+		 "NAME": "Kaka Commander's Badge",
+		 "FLAVOR": "Part of the Flock!",
+		 "DESCRIPTIONS": [
+			 "Allows you to recruit cultist companions. NL Cultists build up and upgrade their own decks as you proceed."
+		 ]
+	 },
+
+	 "StarBreaker:KakaDogTag": {
+		 "NAME": "Kaka Dog Tag",
+		 "FLAVOR": "KAye KAye Captain!",
+		 "DESCRIPTIONS": [
+			 "This loyal companion will join you in battle."
 		 ]
 	 }
 }

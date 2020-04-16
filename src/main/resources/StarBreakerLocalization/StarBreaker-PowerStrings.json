@@ -70,5 +70,19 @@
 			"Clash offers #b",
 			" percent lifesteal."
 		]
+	},
+
+	"StarBreaker:KakaMinionMiscPower": {
+		"NAME": "KakaMinionMiscPower",
+		"DESCRIPTIONS": [
+			"KakaMinionMiscPower"
+		]
+	},
+
+	"StarBreaker:KakaMinionAggroPower": {
+		"NAME": "Aggro",
+		"DESCRIPTIONS": [
+			"Becomes the target of all hostile attacks."
+		]
 	}
 }

@@ -67,7 +67,7 @@
      public void updateClue(){
          this.clue--;
          if(this.clue < 0){
-             this.clue = AbstractDungeon.cardRng.random(this.MIN_CLUE_REQUIREMENT, this.MAX_CLUE_REQUIREMENT);
+             this.clue = AbstractDungeon.cardRandomRng.random(this.MIN_CLUE_REQUIREMENT, this.MAX_CLUE_REQUIREMENT);
          }
          if(this.clue == 0){
              beginPulse();
@@ -89,7 +89,7 @@
          flash();
          stopPulse();
          // debug
-         this.clue = 0;
+//         this.clue = 0;
          if(this.clue == 0 && AbstractDungeon.getCurrRoom().phase == AbstractRoom.RoomPhase.COMPLETE)
             InvokeEvent("StarBreaker:BountyHunterEvent");
      }

@@ -1,15 +1,21 @@
 package StarBreakerMod;
 
 import StarBreakerMod.cards.*;
+import StarBreakerMod.cards.kakaCards.KakaDefendCard;
+import StarBreakerMod.cards.kakaCards.KakaStrikeCard;
 import StarBreakerMod.events.BountyHunterEvent;
 import StarBreakerMod.events.HadesTrialEvent;
+import StarBreakerMod.helpers.KakaMinionManager;
 import StarBreakerMod.helpers.StarBreakerSetupHelper;
 import StarBreakerMod.monsters.BookOfNursing;
 import StarBreakerMod.monsters.GayCenturion;
+import StarBreakerMod.monsters.minions.KakaTeamData;
+import StarBreakerMod.patches.AbstractCardEnumPatches;
 import StarBreakerMod.relics.*;
 import basemod.BaseMod;
 import basemod.helpers.RelicType;
 import basemod.interfaces.*;
+import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.dungeons.Exordium;
 import com.megacrit.cardcrawl.dungeons.TheCity;
@@ -49,6 +55,8 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
 
     public static void initialize(){
         new StarBreakerMod();
+        KakaMinionManager.InitializeInstance();
+        // BaseMod.addColor(AbstractCardEnumPatches.SBM_KAKA_BLUE, Color.BLUE, Color.BLACK, Color.DARK_GRAY, Color.BLACK, Color descBoxColor, Color trailVfxColor, Color glowColor, String attackBg, String skillBg, String powerBg, String energyOrb, String attackBgPortrait, String skillBgPortrait, String powerBgPortrait, String energyOrbPortrait, String cardEnergyOrb);
     }
 
     @Override
@@ -100,11 +108,20 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
 
         BaseMod.addCard(new ClashMasteryCard());
         UnlockTracker.unlockCard(ClashMasteryCard.ID);
+
+        // Kaka cards
+        BaseMod.addCard(new KakaStrikeCard());
+        UnlockTracker.unlockCard(KakaStrikeCard.ID);
+
+        BaseMod.addCard(new KakaDefendCard());
+        UnlockTracker.unlockCard(KakaDefendCard.ID);
     }
 
     @Override
     public void receiveEditRelics(){
 //        BaseMod.addRelic(new TestRelic(), RelicType.SHARED);
+//        BaseMod.addRelic(new TestSummonRelic(), RelicType.SHARED);
+
         BaseMod.addRelic(new BloodScales(), RelicType.SHARED);
         BaseMod.addRelic(new BloodBoot(), RelicType.SHARED);
         BaseMod.addRelic(new SpireTheoryGamblingChip(), RelicType.SHARED);
@@ -118,6 +135,8 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
         // Special relics
         BaseMod.addRelic(new HadesTrialErebusMark(), RelicType.SHARED);
         BaseMod.addRelic(new HadesTrialTroveMark(), RelicType.SHARED);
+        BaseMod.addRelic(new KakaCommanderBadge(), RelicType.SHARED);
+        BaseMod.addRelic(new KakaDogTag(), RelicType.SHARED);
     }
 
     @Override

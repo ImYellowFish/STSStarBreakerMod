@@ -9,5 +9,20 @@
 		"TEXT": [
 			"Blackmail"
 		]
+	},
+
+	"StarBreaker:RewardItem": {
+		"TEXT": [
+			"Recruit a new kaka (",
+			" Gold)"
+		]
+	},
+
+	"StarBreaker:KakaNames": {
+		"TEXT": [
+			"Newbie",
+			"Joe",
+			"Rambo"
+		]
 	}
 }
