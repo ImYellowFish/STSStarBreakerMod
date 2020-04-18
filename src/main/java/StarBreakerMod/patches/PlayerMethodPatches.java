@@ -1,6 +1,7 @@
 package StarBreakerMod.patches;
 
-import StarBreakerMod.helpers.KakaMinionManager;
+import StarBreakerMod.minions.KakaMinionManager;
+import StarBreakerMod.minions.BaseFriendlyKaka;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
@@ -8,11 +9,8 @@ import com.megacrit.cardcrawl.cards.DamageInfo;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.monsters.AbstractMonster;
 
-/*
- * All of these are checking against AbstractPlayerWithMinions to avoid double calling of those if
- * someone is using AbstractPlayerWithMinions as their base start of a character.
- */
 public class PlayerMethodPatches {
 
 
@@ -44,12 +42,27 @@ public class PlayerMethodPatches {
                 return SpireReturn.Return(null);
             }
         }
+    }
 
-        public static SpireReturn Postfix(AbstractPlayer _instance, DamageInfo info) {
-            if(_instance.isDead){
-                KakaMinionManager.getInstance(_instance).onPlayerDead();
+    @SpirePatch(
+            cls = "com.megacrit.cardcrawl.monsters.AbstractMonster",
+            method = "damage",
+            paramtypes = {"com.megacrit.cardcrawl.cards.DamageInfo"}
+    )
+    public static class MonsterDamagePatch{
+
+        public static void Postfix(AbstractMonster _instance, DamageInfo info) {
+            if(_instance instanceof BaseFriendlyKaka){
+                return;
             }
-            return SpireReturn.Continue();
+            else{
+                // other type of monsters, damage from kaka
+                if(info.owner instanceof  BaseFriendlyKaka){
+                    if((_instance.isDying || _instance.currentHealth <= 0) && !_instance.halfDead){
+                        KakaMinionManager.getInstance(AbstractDungeon.player).onKakaKill((BaseFriendlyKaka) info.owner, _instance);
+                    }
+                }
+            }
         }
     }
 

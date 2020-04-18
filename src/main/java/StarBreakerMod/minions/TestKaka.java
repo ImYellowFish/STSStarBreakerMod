@@ -1,4 +1,4 @@
-package StarBreakerMod.monsters.minions;
+package StarBreakerMod.minions;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.spine.AnimationState;

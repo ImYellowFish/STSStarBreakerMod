@@ -1,8 +1,9 @@
  package StarBreakerMod.powers;
  
- import StarBreakerMod.helpers.KakaMinionManager;
- import com.badlogic.gdx.math.MathUtils;
+ import StarBreakerMod.minions.KakaMinionManager;
+ import StarBreakerMod.minions.BaseFriendlyKaka;
  import com.megacrit.cardcrawl.cards.DamageInfo;
+ import com.megacrit.cardcrawl.characters.AbstractPlayer;
  import com.megacrit.cardcrawl.core.AbstractCreature;
  import com.megacrit.cardcrawl.core.CardCrawlGame;
  import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
@@ -36,8 +37,12 @@
 
      public void updateDescription() {
          KakaMinionManager mgr = KakaMinionManager.getInstance(AbstractDungeon.player);
-         this.description = "Total aggro:" + mgr.getAggro(this.owner) +
-                 ". NL IsTarget" + (mgr.aggroTarget == this.owner);
-
+         if(this.owner instanceof AbstractPlayer) {
+             this.description = "Total aggro:" + mgr.getAggro(this.owner) +
+                     ". NL IsTarget" + (mgr.aggroTarget == this.owner);
+         }
+         else if(this.owner instanceof  BaseFriendlyKaka){
+            this.description = ((BaseFriendlyKaka)this.owner).kakaData.toString();
+         }
      }
  }

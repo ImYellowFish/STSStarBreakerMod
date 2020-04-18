@@ -1,18 +1,13 @@
-package StarBreakerMod.monsters.minions.ai;
+package StarBreakerMod.minions.ai;
 
 import StarBreakerMod.StarBreakerMod;
-import StarBreakerMod.actions.KakaShowCardAction;
-import StarBreakerMod.cards.kakaCards.KakaPlayableCard;
-import StarBreakerMod.helpers.KakaMinionManager;
-import StarBreakerMod.monsters.minions.BaseFriendlyKaka;
+import StarBreakerMod.minions.KakaMinionManager;
+import StarBreakerMod.minions.BaseFriendlyKaka;
 import StarBreakerMod.relics.KakaDogTag;
-import com.megacrit.cardcrawl.actions.AbstractGameAction;
-import com.megacrit.cardcrawl.actions.animations.AnimateSlowAttackAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
-import com.megacrit.cardcrawl.random.Random;
 
 
 public abstract class AbstractKakaAI {
@@ -21,25 +16,35 @@ public abstract class AbstractKakaAI {
     public AbstractKakaAI(KakaDogTag dogTag) {
         this.dogTag = dogTag;
     }
+
     // ----------------------------------------
     // Interfaces
     // ----------------------------------------
+    public abstract void onKakaSpawn();
+
+    public abstract void createIntent();
+
     public abstract void onKakaTakeTurn();
 
+    public abstract void postKakaPlayCard(AbstractCreature target, AbstractCard card);
+
+    public abstract void onKakaUpgrade();
 
     // ----------------------------------------
     // Helpers
     // ----------------------------------------
     public void PlayCard(AbstractCard card, AbstractMonster target) {
-        KakaMinionManager mgr = KakaMinionManager.getInstance(AbstractDungeon.player);
-        mgr.PlayCard(card, this.GetOwner(), target);
+        StarBreakerMod.logger.info("Try play card " + card.name);
+        KakaMinionManager mgr = KakaMinionManager.getInstance();
+        mgr.playCard(card, this.GetOwner(), target);
     }
 
-    public AbstractMonster GetRandomMonster() {
-        return AbstractDungeon.currMapNode.room.monsters.getRandomMonster((AbstractMonster) null, true, AbstractDungeon.cardRandomRng);
+    public AbstractMonster getRandomMonsterTarget() {
+        return AbstractDungeon.currMapNode.room.monsters.getRandomMonster((AbstractMonster) null, true, KakaMinionManager.getInstance().cardRandomRng);
     }
 
     public BaseFriendlyKaka GetOwner() {
         return dogTag.kaka;
     }
+
 }

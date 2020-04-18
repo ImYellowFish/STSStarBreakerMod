@@ -1,4 +1,4 @@
-package StarBreakerMod.monsters.minions.ai;
+package StarBreakerMod.minions.ai;
 
 import StarBreakerMod.StarBreakerMod;
 import StarBreakerMod.relics.KakaDogTag;

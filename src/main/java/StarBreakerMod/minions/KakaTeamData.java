@@ -1,6 +1,4 @@
-package StarBreakerMod.monsters.minions;
-
-import java.util.ArrayList;
+package StarBreakerMod.minions;
 
 public class KakaTeamData{
     // Saved in kaka commander's badge relic

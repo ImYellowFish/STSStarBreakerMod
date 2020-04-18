@@ -1,9 +1,9 @@
-package StarBreakerMod.monsters.minions;
+package StarBreakerMod.minions;
 
 import StarBreakerMod.StarBreakerMod;
 import StarBreakerMod.actions.KakaShowCardAction;
 import StarBreakerMod.cards.kakaCards.KakaPlayableCard;
-import StarBreakerMod.monsters.minions.ai.AbstractKakaAI;
+import StarBreakerMod.minions.ai.AbstractKakaAI;
 import StarBreakerMod.relics.KakaDogTag;
 import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.spine.AnimationState;
@@ -41,23 +41,24 @@ public class BaseFriendlyKaka extends AbstractFriendlyMonster {
     // Initialization
     // ----------------------------------------
     public BaseFriendlyKaka(int index, KakaMinionData kakaData, CardGroup kakaDeck, AbstractKakaAI kakaAI) {
-        super(NAME, ID, kakaData.maxHealth, -8.0F, 10.0F, 230.0F, 240.0F, null, 0, 0);
+        super(NAME, ID, kakaData.maxHealth, -8.0F, 10.0F, 80.0F, 240.0F, null, 0, 0);
         this.kakaData = kakaData;
         this.masterDeck = kakaDeck;
         this.currentHealth = kakaData.currentHealth;
         this.AI = kakaAI;
-        Init(index);
+        initializeKaka(index);
     }
 
     public void SetDogTagRelic(KakaDogTag dogTag){
         this.dogTag = dogTag;
+        dogTag.kaka = this;
     }
 
     public void SetDeck(CardGroup deck){
         this.masterDeck = deck;
     }
 
-    protected void Init(int index){
+    protected void initializeKaka(int index){
         SetKakaPosition(index);
         SetKakaAnimation();
     }
@@ -92,6 +93,7 @@ public class BaseFriendlyKaka extends AbstractFriendlyMonster {
 
     public void die(){
         super.die();
+        KakaMinionManager.getInstance(AbstractDungeon.player).playInstantKakaDeathSfx();
         if(this.dogTag != null){
             this.dogTag.usedUp();
         }
@@ -104,6 +106,11 @@ public class BaseFriendlyKaka extends AbstractFriendlyMonster {
         RecordHealth();
     }
 
+    public void heal(int healAmount) {
+        super.heal(healAmount);
+        RecordHealth();
+    }
+
     public void atTurnStartPostDraw(){
         // TODO: add energy, reset cardPlayed
         // TODO: refresh intent, strategy and description
@@ -111,6 +118,7 @@ public class BaseFriendlyKaka extends AbstractFriendlyMonster {
         for(AbstractCard c : this.masterDeck.group){
             c.resetAttributes();
         }
+        this.AI.createIntent();
     }
 
     // ----------------------------------------

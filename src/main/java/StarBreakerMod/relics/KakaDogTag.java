@@ -1,10 +1,10 @@
  package StarBreakerMod.relics;
+ import StarBreakerMod.StarBreakerMod;
  import StarBreakerMod.cards.kakaCards.KakaStrikeCard;
- import StarBreakerMod.helpers.KakaMinionManager;
- import StarBreakerMod.monsters.minions.BaseFriendlyKaka;
- import StarBreakerMod.monsters.minions.ai.AbstractKakaAI;
- import StarBreakerMod.monsters.minions.KakaMinionData;
- import StarBreakerMod.monsters.minions.ai.KakaAIFactory;
+ import StarBreakerMod.minions.KakaMinionManager;
+ import StarBreakerMod.minions.BaseFriendlyKaka;
+ import StarBreakerMod.minions.ai.AbstractKakaAI;
+ import StarBreakerMod.minions.KakaMinionData;
  import basemod.abstracts.CustomRelic;
  import basemod.abstracts.CustomSavable;
  import com.evacipated.cardcrawl.mod.stslib.relics.ClickableRelic;
@@ -65,6 +65,10 @@
          }
      }
 
+     public void onPlayerEndTurn(){
+         this.description = getUpdatedDescription();
+     }
+
      public void onEquip(){
          // When obtain, generate random kaka data for this
          KakaMinionManager.getInstance(AbstractDungeon.player).generateRecruitableKakaForRelic(this);
@@ -104,9 +108,8 @@
          AbstractPlayer p = AbstractDungeon.player;
          if (p != null && !this.usedUp && this.kakaData.alive) {
              flash();
-             BaseFriendlyKaka kaka = KakaMinionManager.getInstance(p).spawnBattleKaka(this.kakaData, this.kakaDeck, this.kakaAI);
-             kaka.SetDogTagRelic(this);
-             this.kaka = kaka;
+             BaseFriendlyKaka kaka = KakaMinionManager.getInstance(p).spawnBattleKaka(this,
+                     this.kakaData, this.kakaDeck, this.kakaAI);
          }
          else{
              this.kaka = null;
@@ -129,6 +132,7 @@
 
      @Override
      public void onLoad(KakaMinionData data) {
+         StarBreakerMod.logger.info("Load kaka:" + data.name);
          KakaMinionData newData = new KakaMinionData();
          data.cloneTo(newData);
 

@@ -1,9 +1,7 @@
-package StarBreakerMod.monsters.minions;
+package StarBreakerMod.minions;
 
-import com.megacrit.cardcrawl.core.Settings;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.vfx.TintEffect;
 

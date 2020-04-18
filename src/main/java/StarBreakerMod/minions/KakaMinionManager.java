@@ -1,25 +1,23 @@
-package StarBreakerMod.helpers;
+package StarBreakerMod.minions;
 
 import StarBreakerMod.StarBreakerMod;
-import StarBreakerMod.actions.KakaShowCardAction;
+import StarBreakerMod.actions.KakaPlayCardAction;
 import StarBreakerMod.cards.kakaCards.KakaDefendCard;
-import StarBreakerMod.cards.kakaCards.KakaPlayableCard;
 import StarBreakerMod.cards.kakaCards.KakaStrikeCard;
-import StarBreakerMod.monsters.minions.AbstractFriendlyMonster;
-import StarBreakerMod.monsters.minions.BaseFriendlyKaka;
-import StarBreakerMod.monsters.minions.ai.AbstractKakaAI;
-import StarBreakerMod.monsters.minions.KakaMinionData;
-import StarBreakerMod.monsters.minions.ai.KakaAIFactory;
+import StarBreakerMod.effects.TopLevelSpeechBubble;
+import StarBreakerMod.minions.ai.AbstractKakaAI;
+import StarBreakerMod.minions.ai.KakaAIFactory;
+import StarBreakerMod.powers.KakaMinionHookPower;
 import StarBreakerMod.powers.KakaMinionMiscPower;
 import StarBreakerMod.relics.KakaDogTag;
 import StarBreakerMod.rewards.RecruitableKakaReward;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
-import com.megacrit.cardcrawl.actions.animations.AnimateSlowAttackAction;
-import com.megacrit.cardcrawl.actions.animations.TalkAction;
 import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
 import com.megacrit.cardcrawl.actions.common.DamageAction;
-import com.megacrit.cardcrawl.actions.utility.SFXAction;
+import com.megacrit.cardcrawl.actions.utility.TextAboveCreatureAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
 import com.megacrit.cardcrawl.cards.DamageInfo;
@@ -31,7 +29,10 @@ import com.megacrit.cardcrawl.localization.UIStrings;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
 import com.megacrit.cardcrawl.powers.AbstractPower;
+import com.megacrit.cardcrawl.random.Random;
 import com.megacrit.cardcrawl.rooms.MonsterRoom;
+import com.megacrit.cardcrawl.vfx.SpeechBubble;
+import com.megacrit.cardcrawl.vfx.TextAboveCreatureEffect;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,10 +45,6 @@ public class KakaMinionManager{
     protected static KakaMinionManager _instance;
     public AbstractPlayer player;
 
-    public static final int AGGRO_PER_DAMAGE = 1;
-    public static final int AGGRO_PER_BLOCK = 1;
-
-
     // Related relic instances
     public ArrayList<KakaDogTag> dogTags = new ArrayList<KakaDogTag>();
     // Related kaka data, save/load is done by relics
@@ -58,12 +55,27 @@ public class KakaMinionManager{
     public MonsterGroup battleKakaGroup = new MonsterGroup(new AbstractMonster[]{});
 
     // Helpers
-    KakaAIFactory kakaAIFactory = new KakaAIFactory();
+    public Random cardRandomRng;
+    public KakaAIFactory kakaAIFactory = new KakaAIFactory();
+
 
     // ----------------------------------------
-    // String values
+    // Constant values
     // ----------------------------------------
+    public static final int INIT_ENERGY_PER_TURN = 2;
+    public static final int INIT_DRAW_PER_TURN = 2;
+    public static final int INIT_MAX_HEALTH = 20;
 
+    public static final int AGGRO_PER_DAMAGE = 1;
+    public static final int AGGRO_PER_BLOCK = 1;
+
+    public static final int LEVEL_POINT_PER_LEVEL_UP = 1;
+    public static final int EXP_TO_UPGRADE = 3;
+    public static final int EXP_PER_BATTLE = 1;
+    public static final int EXP_PER_KILL = 1;
+    public static final int MAX_HP_PER_LEVEL_UP = 8;
+
+    public static UIStrings TIP_STRINGS;
 
     // ----------------------------------------
     // Battle values
@@ -80,7 +92,16 @@ public class KakaMinionManager{
     // ----------------------------------------
     // Get static instance
     public static KakaMinionManager getInstance(AbstractPlayer player){
+        // Initialize here, as player is assigned the first time
+        if(_instance.player == null) {
+            _instance.TIP_STRINGS = CardCrawlGame.languagePack.getUIString("StarBreaker:KakaBattleTips");
+        }
+
         _instance.player = player;
+        return _instance;
+    }
+
+    public static KakaMinionManager getInstance(){
         return _instance;
     }
 
@@ -147,19 +168,27 @@ public class KakaMinionManager{
     // Inherited player battle subscriber
     // ----------------------------------------
     public void onPlayerVictory(){
-        // TODO add exp
+        // TODO add extra exp for kaka with certain traits
+        for(KakaDogTag dogTag : this.dogTags){
+            giveKakaExp(dogTag, this.EXP_PER_BATTLE);
+        }
     }
 
-    public void onPlayerDead(){
+    public boolean onPlayerDeath(DamageInfo damageInfo){
         // TODO: add flee animation
         // TODO: add kaka sacrifice when player almost die
         StarBreakerMod.logger.info("OnPlayerDead kaka count:" + this.battleKakaGroup.monsters.size());
         if(this.battleKakaGroup.monsters.isEmpty()){
-            return;
+            return true;
         }
+
+        // TODO: random talk
         AbstractCreature kaka = this.battleKakaGroup.getRandomMonster();
-        AbstractDungeon.actionManager.addToBottom((AbstractGameAction)new SFXAction("VO_CULTIST_1A"));
-        AbstractDungeon.actionManager.addToBottom((AbstractGameAction)new TalkAction(kaka, "~Nooooooo,~ ~IronClad!~ !", 1.0F, 2.0F));
+//        AbstractDungeon.actionManager.addToTop(new TalkAction(kaka, "~Nooooooo,~ ~IronClad!~ !", 1.0F, 2.0F));
+        KakaInstantTalk(kaka, "~Nooooooo,~ ~IronClad!~ !", 2.0F, true);
+        playInstantKakaDeathSfx();
+
+        return true;
     }
 
     public boolean onPlayerDamage(DamageInfo info){
@@ -221,6 +250,9 @@ public class KakaMinionManager{
     }
 
     public void onPlayerApplyStartOfCombatPreDrawLogic(){
+        // copy some random
+        cardRandomRng = AbstractDungeon.cardRandomRng.copy();
+
         dogTags.forEach(KakaDogTag::SpawnKaka);
 
         // Set first turn aggro target
@@ -236,6 +268,9 @@ public class KakaMinionManager{
         AbstractPlayer p = this.player;
         AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
                 p, p, (AbstractPower)new KakaMinionMiscPower(p)
+        ));
+        AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
+                p, p, (AbstractPower)new KakaMinionHookPower(p)
         ));
     }
 
@@ -265,10 +300,10 @@ public class KakaMinionManager{
         kakaData.name = generateRandomKakaName();
 
         kakaData.alive = true;
-        kakaData.maxHealth = 20;
-        kakaData.currentHealth = 20;
-        kakaData.energyPerTurn = 2;
-        kakaData.cardDrawPerTurn = 2;
+        kakaData.maxHealth = INIT_MAX_HEALTH;
+        kakaData.currentHealth = INIT_MAX_HEALTH;
+        kakaData.energyPerTurn = INIT_ENERGY_PER_TURN;
+        kakaData.cardDrawPerTurn = INIT_DRAW_PER_TURN;
         kakaData.level = 0;
         kakaData.exp = 0;
         kakaData.aiType = KakaAIFactory.KakaAIType.DEFAULT;
@@ -294,9 +329,12 @@ public class KakaMinionManager{
     // ----------------------------------------
     // Spawn interface
     // ----------------------------------------
-    public BaseFriendlyKaka spawnBattleKaka(KakaMinionData kakaData, CardGroup kakaDeck, AbstractKakaAI kakaAI){
+    public BaseFriendlyKaka spawnBattleKaka(KakaDogTag dogTag, KakaMinionData kakaData, CardGroup kakaDeck, AbstractKakaAI kakaAI){
         int index = this.battleKakaGroup.monsters.size();
         BaseFriendlyKaka kaka = new BaseFriendlyKaka(index, kakaData, kakaDeck, kakaAI);
+        kaka.SetDogTagRelic(dogTag);
+        kaka.AI.onKakaSpawn();
+
         kaka.init();
         kaka.usePreBattleAction();
         //minionToAdd.useUniversalPreBattleAction();
@@ -317,16 +355,21 @@ public class KakaMinionManager{
     // ----------------------------------------
     // Battle interface
     // ----------------------------------------
-    public void PlayCard(AbstractCard card, BaseFriendlyKaka kaka, AbstractMonster target){
-        ((KakaPlayableCard)card).calculateKakaCardDamage(kaka, target);
-        AbstractDungeon.actionManager.addToBottom((AbstractGameAction)new AnimateSlowAttackAction((AbstractCreature)kaka));
-        AbstractDungeon.actionManager.addToBottom((AbstractGameAction) new KakaShowCardAction(kaka, card));
-        ((KakaPlayableCard)card).OnKakaUseCard(kaka, target);
+    public void playCard(AbstractCard card, BaseFriendlyKaka kaka, AbstractMonster target){
+        AbstractDungeon.actionManager.addToTop((AbstractGameAction)new KakaPlayCardAction(kaka, target, card));
+    }
+
+    public void onKakaKill(BaseFriendlyKaka kaka, AbstractCreature target){
+        giveKakaExp(kaka.dogTag, this.EXP_PER_KILL);
     }
 
     // ----------------------------------------
     // Aggro
     // ----------------------------------------
+    public boolean isAggroTarget(AbstractCreature c){
+        return this.aggroTarget == c;
+    }
+
     public void addAggro(AbstractCreature p, int deltaAggro) {
         if (p instanceof AbstractPlayer) {
             this.playerAggro += deltaAggro;
@@ -376,4 +419,73 @@ public class KakaMinionManager{
         return this.dogTags.get(id).kakaAI;
     }
 
+    public void replaceKakaAI(KakaDogTag dogTag, KakaAIFactory.KakaAIType aiType){
+        // TODO
+    }
+
+    // ----------------------------------------
+    // Exp and level
+    // ----------------------------------------
+    public void giveKakaExp(KakaDogTag dogTag, int exp){
+        if(!dogTag.kakaData.alive)
+            return;
+        StarBreakerMod.logger.info("giveKakaExp: " + dogTag.kakaData.name);
+        KakaMinionData kakaData = dogTag.kakaData;
+        kakaData.exp += exp;
+
+        AbstractCreature kaka = dogTag.kaka;
+        if(kaka != null) {
+            AbstractDungeon.topLevelEffects.add(new TextAboveCreatureEffect(kaka.hb.cX - kaka.animX, kaka.hb.cY + kaka.hb.height / 2.0F, this.TIP_STRINGS.TEXT[0] + exp + this.TIP_STRINGS.TEXT[1], Color.WHITE));
+        }
+        while(kakaData.exp >= this.EXP_TO_UPGRADE){
+            upgradeKaka(dogTag);
+            kakaData.exp -= this.EXP_TO_UPGRADE;
+        }
+        kakaData.exp = Math.max(0, kakaData.exp);
+    }
+
+    public void upgradeKaka(KakaDogTag dogTag){
+        StarBreakerMod.logger.info("Kaka upgraded: " + dogTag.kakaData.name + ", lv:" + dogTag.kakaData.level);
+        dogTag.kakaData.level++;
+        dogTag.kakaAI.onKakaUpgrade();
+        if(dogTag.kaka != null){
+//            AbstractDungeon.actionManager.addToBottom((AbstractGameAction)new VFXAction((AbstractGameEffect)new LightBulbEffect(dogTag.kaka.hb), 0.2F));
+            AbstractDungeon.actionManager.addToBottom(new TextAboveCreatureAction(dogTag.kaka, this.TIP_STRINGS.TEXT[2]));
+        }
+    }
+
+
+    // ----------------------------------------
+    // Talk
+    // ----------------------------------------
+    public void KakaInstantTalk(AbstractCreature kaka, String msg, float bubbleDuration, boolean isTopLevel) {
+        if(isTopLevel){
+            AbstractDungeon.topLevelEffects.add(new TopLevelSpeechBubble(kaka.hb.cX + kaka.dialogX, kaka.hb.cY +kaka.dialogY, bubbleDuration, msg, false));
+        }
+        else {
+            AbstractDungeon.effectList.add(new SpeechBubble(kaka.hb.cX + kaka.dialogX, kaka.hb.cY + kaka.dialogY, bubbleDuration, msg, false));
+        }
+    }
+
+    public void playInstantKakaTalkSfx() {
+        int roll = MathUtils.random(2);
+        if (roll == 0) {
+            CardCrawlGame.sound.play("VO_CULTIST_1A");
+        } else if (roll == 1) {
+            CardCrawlGame.sound.play("VO_CULTIST_1B");
+        } else {
+            CardCrawlGame.sound.play("VO_CULTIST_1C");
+        }
+    }
+
+    public void playInstantKakaDeathSfx() {
+        int roll = MathUtils.random(2);
+        if (roll == 0) {
+            CardCrawlGame.sound.play("VO_CULTIST_2A");
+        } else if (roll == 1) {
+            CardCrawlGame.sound.play("VO_CULTIST_2B");
+        } else {
+            CardCrawlGame.sound.play("VO_CULTIST_2C");
+        }
+    }
 }

@@ -1,15 +1,9 @@
 package StarBreakerMod.patches;
 
-import StarBreakerMod.helpers.KakaMinionManager;
-import StarBreakerMod.monsters.minions.AbstractFriendlyMonster;
-import StarBreakerMod.monsters.minions.KakaMinionData;
-import StarBreakerMod.relics.KakaDogTag;
+import StarBreakerMod.minions.AbstractFriendlyMonster;
 import com.evacipated.cardcrawl.modthespire.lib.SpireField;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
-import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
-
-import java.util.ArrayList;
 
 @SpirePatch(
         cls = "com.megacrit.cardcrawl.characters.AbstractPlayer",

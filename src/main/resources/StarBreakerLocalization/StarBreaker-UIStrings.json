@@ -24,5 +24,13 @@
 			"Joe",
 			"Rambo"
 		]
+	},
+
+	"StarBreaker:KakaBattleTips": {
+		"TEXT": [
+			"Gain ",
+			" xp",
+			"Level Up"
+		]
 	}
 }

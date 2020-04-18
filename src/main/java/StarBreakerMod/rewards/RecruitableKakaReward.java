@@ -1,7 +1,5 @@
 package StarBreakerMod.rewards;
 
-import StarBreakerMod.helpers.KakaMinionManager;
-import StarBreakerMod.relics.KakaDogTag;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.localization.UIStrings;

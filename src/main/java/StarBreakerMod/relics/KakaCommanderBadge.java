@@ -1,6 +1,6 @@
  package StarBreakerMod.relics;
- import StarBreakerMod.helpers.KakaMinionManager;
- import StarBreakerMod.monsters.minions.KakaTeamData;
+ import StarBreakerMod.minions.KakaMinionManager;
+ import StarBreakerMod.minions.KakaTeamData;
  import basemod.abstracts.CustomRelic;
  import basemod.abstracts.CustomSavable;
  import com.evacipated.cardcrawl.mod.stslib.relics.ClickableRelic;

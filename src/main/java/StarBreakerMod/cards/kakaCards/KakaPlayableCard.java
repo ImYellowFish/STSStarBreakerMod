@@ -1,36 +1,38 @@
 package StarBreakerMod.cards.kakaCards;
 
-import StarBreakerMod.monsters.minions.BaseFriendlyKaka;
-import StarBreakerMod.powers.CunningPower;
-import StarBreakerMod.powers.LoseCunningPower;
-import StarBreakerMod.powers.ThornyRosePower;
+import StarBreakerMod.minions.BaseFriendlyKaka;
 import com.badlogic.gdx.math.MathUtils;
-import com.megacrit.cardcrawl.actions.AbstractGameAction;
-import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
-import com.megacrit.cardcrawl.actions.common.DamageAction;
-import com.megacrit.cardcrawl.actions.common.DrawCardAction;
-import com.megacrit.cardcrawl.cards.AbstractCard;
-import com.megacrit.cardcrawl.cards.DamageInfo;
 import com.megacrit.cardcrawl.core.AbstractCreature;
-import com.megacrit.cardcrawl.core.CardCrawlGame;
-import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.powers.AbstractPower;
-import com.megacrit.cardcrawl.powers.VulnerablePower;
-import com.megacrit.cardcrawl.powers.AngerPower;
-
-import com.megacrit.cardcrawl.localization.CardStrings;
 
 import basemod.abstracts.CustomCard;
 
 import java.util.ArrayList;
 
 public abstract class KakaPlayableCard extends CustomCard {
+    public enum KakaCardType {
+        KeyPower,
+        OptPower,
+        KeyOffensive,
+        KeyDefensive,
+        OptOffensive,
+        OptDefensive,
+        Energy,
+    }
+
+    // ----------------------------------------
+    // Variables
+    // ----------------------------------------
+    public KakaCardType kakaCardType;
+    public int energyGain = 0;
+    public int cardDrawGain = 0;
+
     // ----------------------------------------
     // Interface
     // ----------------------------------------
-    public abstract void OnKakaUseCard(BaseFriendlyKaka kaka, AbstractMonster m);
+    public abstract void OnKakaUseCard(BaseFriendlyKaka kaka, AbstractCreature target);
 
 
     // ----------------------------------------
