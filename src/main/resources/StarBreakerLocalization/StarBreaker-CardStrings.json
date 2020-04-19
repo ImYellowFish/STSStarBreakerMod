@@ -34,5 +34,15 @@
 	"StarBreaker:ClashMasteryCard": {
 		"NAME": "Clash Mastery",
 		"DESCRIPTION": "Clash offers !M! percent lifesteal. NL You cannot gain Block from cards."
+	},
+
+	"StarBreaker:KakaStatEnergyCard": {
+		"NAME": "Base Energy",
+		"DESCRIPTION": "Gain !M! [B] at the start of your turn."
+	},
+
+	"StarBreaker:KakaStatDrawCard": {
+		"NAME": "Base Draw",
+		"DESCRIPTION": "Draw !M! cards at the start of your turn."
 	}
 }

@@ -1,7 +1,7 @@
 package StarBreakerMod.minions.ai;
 
 import StarBreakerMod.StarBreakerMod;
-import StarBreakerMod.minions.KakaMinionManager;
+import StarBreakerMod.minions.system.KakaMinionManager;
 import StarBreakerMod.minions.BaseFriendlyKaka;
 import StarBreakerMod.relics.KakaDogTag;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -20,6 +20,8 @@ public abstract class AbstractKakaAI {
     // ----------------------------------------
     // Interfaces
     // ----------------------------------------
+    public abstract void updateEnergyAndDrawOnTurnStart();
+
     public abstract void onKakaSpawn();
 
     public abstract void createIntent();
@@ -29,6 +31,8 @@ public abstract class AbstractKakaAI {
     public abstract void postKakaPlayCard(AbstractCreature target, AbstractCard card);
 
     public abstract void onKakaUpgrade();
+
+    public abstract void onVictory();
 
     // ----------------------------------------
     // Helpers

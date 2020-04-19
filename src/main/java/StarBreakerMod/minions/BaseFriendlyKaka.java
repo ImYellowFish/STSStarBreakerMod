@@ -4,6 +4,8 @@ import StarBreakerMod.StarBreakerMod;
 import StarBreakerMod.actions.KakaShowCardAction;
 import StarBreakerMod.cards.kakaCards.KakaPlayableCard;
 import StarBreakerMod.minions.ai.AbstractKakaAI;
+import StarBreakerMod.minions.system.KakaMinionData;
+import StarBreakerMod.minions.system.KakaMinionManager;
 import StarBreakerMod.relics.KakaDogTag;
 import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.spine.AnimationState;
@@ -33,6 +35,7 @@ public class BaseFriendlyKaka extends AbstractFriendlyMonster {
     public KakaDogTag dogTag;
     public CardGroup masterDeck;
     public int energy = 0;
+    public int cardsInHand = 0;
     public int aggro = 0;
 
     public AbstractKakaAI AI;
@@ -112,12 +115,12 @@ public class BaseFriendlyKaka extends AbstractFriendlyMonster {
     }
 
     public void atTurnStartPostDraw(){
-        // TODO: add energy, reset cardPlayed
         // TODO: refresh intent, strategy and description
-        this.energy += this.kakaData.energyPerTurn;
+
         for(AbstractCard c : this.masterDeck.group){
             c.resetAttributes();
         }
+        this.AI.updateEnergyAndDrawOnTurnStart();
         this.AI.createIntent();
     }
 

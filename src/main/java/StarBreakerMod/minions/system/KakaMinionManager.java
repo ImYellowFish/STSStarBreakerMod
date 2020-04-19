@@ -1,12 +1,17 @@
-package StarBreakerMod.minions;
+package StarBreakerMod.minions.system;
 
 import StarBreakerMod.StarBreakerMod;
 import StarBreakerMod.actions.KakaPlayCardAction;
 import StarBreakerMod.cards.kakaCards.KakaDefendCard;
+import StarBreakerMod.cards.kakaCards.KakaStatDrawCard;
+import StarBreakerMod.cards.kakaCards.KakaStatEnergyCard;
 import StarBreakerMod.cards.kakaCards.KakaStrikeCard;
 import StarBreakerMod.effects.TopLevelSpeechBubble;
+import StarBreakerMod.minions.AbstractFriendlyMonster;
+import StarBreakerMod.minions.BaseFriendlyKaka;
 import StarBreakerMod.minions.ai.AbstractKakaAI;
 import StarBreakerMod.minions.ai.KakaAIFactory;
+import StarBreakerMod.powers.KakaMinionAggroPower;
 import StarBreakerMod.powers.KakaMinionHookPower;
 import StarBreakerMod.powers.KakaMinionMiscPower;
 import StarBreakerMod.relics.KakaDogTag;
@@ -17,6 +22,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
 import com.megacrit.cardcrawl.actions.common.DamageAction;
+import com.megacrit.cardcrawl.actions.common.RemoveSpecificPowerAction;
 import com.megacrit.cardcrawl.actions.utility.TextAboveCreatureAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
@@ -171,6 +177,9 @@ public class KakaMinionManager{
         // TODO add extra exp for kaka with certain traits
         for(KakaDogTag dogTag : this.dogTags){
             giveKakaExp(dogTag, this.EXP_PER_BATTLE);
+
+            // try to drop some traits or cards
+            dogTag.kakaAI.onVictory();
         }
     }
 
@@ -266,9 +275,9 @@ public class KakaMinionManager{
             ));
         });
         AbstractPlayer p = this.player;
-        AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
-                p, p, (AbstractPower)new KakaMinionMiscPower(p)
-        ));
+//        AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
+//                p, p, (AbstractPower)new KakaMinionMiscPower(p)
+//        ));
         AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
                 p, p, (AbstractPower)new KakaMinionHookPower(p)
         ));
@@ -302,15 +311,19 @@ public class KakaMinionManager{
         kakaData.alive = true;
         kakaData.maxHealth = INIT_MAX_HEALTH;
         kakaData.currentHealth = INIT_MAX_HEALTH;
-        kakaData.energyPerTurn = INIT_ENERGY_PER_TURN;
-        kakaData.cardDrawPerTurn = INIT_DRAW_PER_TURN;
         kakaData.level = 0;
         kakaData.exp = 0;
         kakaData.aiType = KakaAIFactory.KakaAIType.DEFAULT;
 
         CardGroup kakaDeck = new CardGroup(CardGroup.CardGroupType.MASTER_DECK);
+        // Add base stat
+        kakaDeck.addToTop(new KakaStatEnergyCard(INIT_ENERGY_PER_TURN, 0));
+        kakaDeck.addToTop(new KakaStatDrawCard(INIT_DRAW_PER_TURN, 0));
+
+        // Add kaka base cards
         kakaDeck.addToTop(new KakaStrikeCard());
         kakaDeck.addToTop(new KakaDefendCard());
+
 
         dogTag.initializeKaka(kakaData, kakaDeck);
     }
@@ -395,10 +408,26 @@ public class KakaMinionManager{
         StarBreakerMod.logger.info("set next turn aggro target: " + this.aggroTarget);
         // TODO: add buff
         this.aggroTarget = target;
+
+        final String aggroPowerName = "KakaMinionAggroPower";
+        // clear and add buffs
+        for(AbstractMonster kaka : this.battleKakaGroup.monsters){
+
+            if(kaka.hasPower(aggroPowerName))
+                AbstractDungeon.actionManager.addToTop(new RemoveSpecificPowerAction(kaka, kaka, aggroPowerName));
+        }
+        if(this.player.hasPower(aggroPowerName))
+            AbstractDungeon.actionManager.addToTop(new RemoveSpecificPowerAction(this.player, this.player, aggroPowerName));
+        // Apply powers if we have at least one kaka companion
+        if(!this.battleKakaGroup.monsters.isEmpty())
+            AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(target, target, new KakaMinionAggroPower(target)));
     }
 
     public void updateAggroInfo(AbstractCreature p, int newAggro){
-        if(newAggro > this.maxAggro){
+        if(p == this.maxAggroTarget){
+            this.maxAggro = newAggro;
+        }
+        else if(newAggro > this.maxAggro){
             this.maxAggroTarget = p;
             this.maxAggro = newAggro;
         }

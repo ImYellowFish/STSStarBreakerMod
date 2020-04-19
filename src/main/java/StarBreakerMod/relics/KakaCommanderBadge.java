@@ -1,16 +1,15 @@
  package StarBreakerMod.relics;
- import StarBreakerMod.minions.KakaMinionManager;
- import StarBreakerMod.minions.KakaTeamData;
+ import StarBreakerMod.minions.system.KakaMinionManager;
  import basemod.abstracts.CustomRelic;
  import basemod.abstracts.CustomSavable;
  import com.evacipated.cardcrawl.mod.stslib.relics.ClickableRelic;
  import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
  import com.megacrit.cardcrawl.relics.AbstractRelic;
 
- public class KakaCommanderBadge extends CustomRelic implements ClickableRelic, CustomSavable<KakaTeamData> {
+ public class KakaCommanderBadge extends CustomRelic implements ClickableRelic {
      public static final String ID = "StarBreaker:KakaCommanderBadge";
 
-     public KakaTeamData teamData;
+//     public KakaTeamData teamData;
 
      public KakaCommanderBadge() {
          super("StarBreaker:KakaCommanderBadge", "clericFace.png", AbstractRelic.RelicTier.SPECIAL, AbstractRelic.LandingSound.SOLID);
@@ -39,19 +38,6 @@
      // Helpers
      public AbstractRelic makeCopy() {
          return new KakaCommanderBadge();
-     }
-
-     @Override
-     public KakaTeamData onSave()
-     {
-         KakaTeamData data = teamData;
-         return data;
-     }
-
-     @Override
-     public void onLoad(KakaTeamData data)
-     {
-         teamData = data;
      }
  }
 

@@ -1,6 +1,6 @@
 package StarBreakerMod.patches;
 
-import StarBreakerMod.minions.KakaMinionManager;
+import StarBreakerMod.minions.system.KakaMinionManager;
 import StarBreakerMod.minions.BaseFriendlyKaka;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;

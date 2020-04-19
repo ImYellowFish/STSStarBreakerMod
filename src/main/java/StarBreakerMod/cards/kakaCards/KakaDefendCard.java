@@ -17,7 +17,7 @@ public class KakaDefendCard extends KakaPlayableCard {
     public KakaDefendCard() {
         super("StarBreaker:KakaDefendCard", cardStrings.NAME, new RegionName("red/skill/defend"), 1, cardStrings.DESCRIPTION, AbstractCard.CardType.SKILL, AbstractCard.CardColor.RED, AbstractCard.CardRarity.BASIC, AbstractCard.CardTarget.SELF);
 
-        this.kakaCardType = KakaCardType.OptDefensive;
+        this.kakaCardType = KakaCardType.Hand_OptDefensive;
         this.baseBlock = 5;
         this.tags.add(AbstractCard.CardTags.STARTER_DEFEND);
     }

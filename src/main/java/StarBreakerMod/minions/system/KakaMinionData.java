@@ -1,4 +1,4 @@
-package StarBreakerMod.minions;
+package StarBreakerMod.minions.system;
 
 import StarBreakerMod.minions.ai.KakaAIFactory;
 import com.megacrit.cardcrawl.cards.CardSave;
@@ -11,8 +11,6 @@ public class KakaMinionData{
     public boolean alive;
     public int currentHealth;
     public int maxHealth;
-    public int energyPerTurn;
-    public int cardDrawPerTurn;
     public KakaAIFactory.KakaAIType aiType;
 
     public int level;
@@ -25,8 +23,6 @@ public class KakaMinionData{
         newData.alive = this.alive;
         newData.currentHealth = this.currentHealth;
         newData.maxHealth = this.maxHealth;
-        newData.energyPerTurn = this.energyPerTurn;
-        newData.cardDrawPerTurn = this.cardDrawPerTurn;
 
         newData.aiType = this.aiType;
         newData.level = this.level;

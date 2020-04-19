@@ -15,7 +15,6 @@
          this.name = NAME;
          this.ID = "KakaMinionAggroPower";
          this.owner = owner;
-         this.amount = 0;
          updateDescription();
          loadRegion("lockon");
      }

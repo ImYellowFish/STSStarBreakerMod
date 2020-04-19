@@ -18,7 +18,7 @@ public class KakaStrikeCard extends KakaPlayableCard {
     public KakaStrikeCard() {
         super("StarBreaker:KakaStrikeCard", cardStrings.NAME, new RegionName("red/attack/strike"), 1, cardStrings.DESCRIPTION, AbstractCard.CardType.ATTACK, AbstractCard.CardColor.RED, AbstractCard.CardRarity.BASIC, AbstractCard.CardTarget.ENEMY);
 
-        this.kakaCardType = KakaCardType.OptOffensive;
+        this.kakaCardType = KakaCardType.Hand_OptOffensive;
         this.baseDamage = 6;
         this.tags.add(AbstractCard.CardTags.STRIKE);
         this.tags.add(AbstractCard.CardTags.STARTER_STRIKE);

@@ -2,20 +2,26 @@ package StarBreakerMod;
 
 import StarBreakerMod.cards.*;
 import StarBreakerMod.cards.kakaCards.KakaDefendCard;
+import StarBreakerMod.cards.kakaCards.KakaStatDrawCard;
+import StarBreakerMod.cards.kakaCards.KakaStatEnergyCard;
 import StarBreakerMod.cards.kakaCards.KakaStrikeCard;
 import StarBreakerMod.events.BountyHunterEvent;
 import StarBreakerMod.events.HadesTrialEvent;
-import StarBreakerMod.minions.KakaMinionManager;
+import StarBreakerMod.minions.system.KakaMinionManager;
 import StarBreakerMod.helpers.StarBreakerSetupHelper;
 import StarBreakerMod.monsters.BookOfNursing;
 import StarBreakerMod.monsters.GayCenturion;
+import StarBreakerMod.patches.AbstractCardEnumPatches;
 import StarBreakerMod.relics.*;
 import basemod.BaseMod;
 import basemod.helpers.RelicType;
 import basemod.interfaces.*;
+import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.dungeons.Exordium;
 import com.megacrit.cardcrawl.dungeons.TheCity;
+import com.megacrit.cardcrawl.helpers.CardHelper;
+import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.localization.*;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
@@ -47,8 +53,8 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
 
     public static void initialize(){
         new StarBreakerMod();
+//        addCustomColor();
         KakaMinionManager.InitializeInstance();
-        // BaseMod.addColor(AbstractCardEnumPatches.SBM_KAKA_BLUE, Color.BLUE, Color.BLACK, Color.DARK_GRAY, Color.BLACK, Color descBoxColor, Color trailVfxColor, Color glowColor, String attackBg, String skillBg, String powerBg, String energyOrb, String attackBgPortrait, String skillBgPortrait, String powerBgPortrait, String energyOrbPortrait, String cardEnergyOrb);
     }
 
     @Override
@@ -102,6 +108,12 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
         UnlockTracker.unlockCard(ClashMasteryCard.ID);
 
         // Kaka cards
+        BaseMod.addCard(new KakaStatEnergyCard(1,0));
+        UnlockTracker.unlockCard(KakaStatEnergyCard.ID);
+
+        BaseMod.addCard(new KakaStatDrawCard(1,0));
+        UnlockTracker.unlockCard(KakaStatDrawCard.ID);
+
         BaseMod.addCard(new KakaStrikeCard());
         UnlockTracker.unlockCard(KakaStrikeCard.ID);
 
@@ -167,5 +179,36 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
 
         // Add special events (will not be randomly generated)
         BaseMod.addEvent(BountyHunterEvent.ID, BountyHunterEvent.class, "Special");
+    }
+
+
+    private static void addCustomColor(){
+        final Color BLUE_BG_COLOR = CardHelper.getColor(19, 45, 40);
+        final Color BLUE_TYPE_BACK_COLOR = CardHelper.getColor(32, 91, 43);
+        final Color BLUE_FRAME_COLOR = CardHelper.getColor(52, 123, 8);
+        final Color BLUE_RARE_OUTLINE_COLOR = new Color(1.0F, 0.75F, 0.43F, 1.0F);
+        final Color BLUE_DESC_BOX_COLOR = CardHelper.getColor(53, 58, 64);
+
+        final Color BLUE_TRAIL_VFX_COLOR = CardHelper.getColor(53, 58, 84);
+        final Color BLUE_BORDER_GLOW_COLOR = new Color(0.2F, 0.9F, 1.0F, 0.25F);
+
+        BaseMod.addColor(AbstractCardEnumPatches.SBM_KAKA_BLUE,
+                BLUE_BG_COLOR,
+                BLUE_TYPE_BACK_COLOR,
+                BLUE_FRAME_COLOR,
+                BLUE_RARE_OUTLINE_COLOR,
+                BLUE_DESC_BOX_COLOR,
+                BLUE_TRAIL_VFX_COLOR,
+                BLUE_BORDER_GLOW_COLOR,
+                ImageMaster.CARD_ATTACK_BG_BLUE.name,
+                ImageMaster.CARD_SKILL_BG_BLUE.name,
+                ImageMaster.CARD_POWER_BG_BLUE.name,
+                ImageMaster.CARD_COLORLESS_ORB.name,
+                ImageMaster.CARD_ATTACK_BG_BLUE_L.name,
+                ImageMaster.CARD_SKILL_BG_BLUE_L.name,
+                ImageMaster.CARD_POWER_BG_BLUE_L.name,
+                ImageMaster.CARD_GRAY_ORB_L.name,
+                "blue"
+        );
     }
 }

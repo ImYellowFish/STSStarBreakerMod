@@ -1,6 +1,6 @@
  package StarBreakerMod.powers;
  
- import StarBreakerMod.minions.KakaMinionManager;
+ import StarBreakerMod.minions.system.KakaMinionManager;
  import com.evacipated.cardcrawl.mod.stslib.powers.interfaces.InvisiblePower;
  import com.evacipated.cardcrawl.mod.stslib.powers.interfaces.OnPlayerDeathPower;
  import com.megacrit.cardcrawl.cards.DamageInfo;

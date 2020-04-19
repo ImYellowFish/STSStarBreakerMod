@@ -13,13 +13,16 @@ import java.util.ArrayList;
 
 public abstract class KakaPlayableCard extends CustomCard {
     public enum KakaCardType {
-        KeyPower,
-        OptPower,
-        KeyOffensive,
-        KeyDefensive,
-        OptOffensive,
-        OptDefensive,
-        Energy,
+        BaseStat_Energy,
+        BaseStat_Draw,
+        Hand_KeyPower,
+        Hand_OptPower,
+        Hand_KeyOffensive,
+        Hand_KeyDefensive,
+        Hand_OptOffensive,
+        Hand_OptDefensive,
+        Hand_EnergyGain,
+        Hand_DrawGain,
     }
 
     // ----------------------------------------

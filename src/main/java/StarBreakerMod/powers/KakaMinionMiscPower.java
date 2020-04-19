@@ -1,6 +1,6 @@
  package StarBreakerMod.powers;
  
- import StarBreakerMod.minions.KakaMinionManager;
+ import StarBreakerMod.minions.system.KakaMinionManager;
  import StarBreakerMod.minions.BaseFriendlyKaka;
  import com.megacrit.cardcrawl.cards.DamageInfo;
  import com.megacrit.cardcrawl.characters.AbstractPlayer;
@@ -10,6 +10,7 @@
  import com.megacrit.cardcrawl.localization.PowerStrings;
  import com.megacrit.cardcrawl.powers.AbstractPower;
 
+ // Shows some information about kaka
  public class KakaMinionMiscPower extends AbstractPower {
      public static final String POWER_ID = "KakaMinionMiscPower";
      private static final PowerStrings powerStrings = CardCrawlGame.languagePack.getPowerStrings("StarBreaker:KakaMinionMiscPower");

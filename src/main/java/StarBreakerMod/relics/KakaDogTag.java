@@ -1,10 +1,10 @@
  package StarBreakerMod.relics;
  import StarBreakerMod.StarBreakerMod;
  import StarBreakerMod.cards.kakaCards.KakaStrikeCard;
- import StarBreakerMod.minions.KakaMinionManager;
+ import StarBreakerMod.minions.system.KakaMinionManager;
  import StarBreakerMod.minions.BaseFriendlyKaka;
  import StarBreakerMod.minions.ai.AbstractKakaAI;
- import StarBreakerMod.minions.KakaMinionData;
+ import StarBreakerMod.minions.system.KakaMinionData;
  import basemod.abstracts.CustomRelic;
  import basemod.abstracts.CustomSavable;
  import com.evacipated.cardcrawl.mod.stslib.relics.ClickableRelic;
@@ -82,26 +82,13 @@
 
      // Test
      public void onRightClick() {
-         // TODO: remove
-         if (this.usedUp)
-             return;
-         if (kakaData.currentHealth <= 0) {
-             // should not be here
-             kakaData.currentHealth = 20;
-             kakaData.maxHealth = 20;
-         }
-         if (kakaData.energyPerTurn <= 0) {
-             kakaData.energyPerTurn = 1;
-         }
-         if (kakaData.cardDrawPerTurn <= 0) {
-             kakaData.cardDrawPerTurn = 2;
-         }
-         if (this.kakaDeck.isEmpty()) {
-             // should not be here
-             kakaDeck.addToTop(new KakaStrikeCard());
-             kakaDeck.addToTop(new KakaStrikeCard());
-         }
-         SpawnKaka();
+         // TODO change to effect
+         AbstractDungeon.gridSelectScreen.open(
+                 this.kakaDeck,
+                 99,
+                 true,
+                 "View Kaka Deck"
+         );
      }
 
      public void SpawnKaka() {
