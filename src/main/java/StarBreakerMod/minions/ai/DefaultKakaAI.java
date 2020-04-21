@@ -143,7 +143,7 @@ public class DefaultKakaAI extends AbstractKakaAI {
     }
 
     public void onKakaUpgrade() {
-        this.dogTag.kakaData.levelPoint += KakaMinionManager.LEVEL_POINT_PER_LEVEL_UP;
+        this.dogTag.kakaData.upgradePoint += KakaMinionManager.LEVEL_POINT_PER_LEVEL_UP;
         int bonusHp = KakaMinionManager.MAX_HP_PER_LEVEL_UP;
 
         if (AbstractDungeon.getCurrRoom().phase == AbstractRoom.RoomPhase.COMBAT && GetOwner() != null) {

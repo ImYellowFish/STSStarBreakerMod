@@ -1,6 +1,7 @@
  package StarBreakerMod.relics;
  import StarBreakerMod.StarBreakerMod;
  import StarBreakerMod.cards.kakaCards.KakaStrikeCard;
+ import StarBreakerMod.effects.KakaStatScreenEffect;
  import StarBreakerMod.minions.system.KakaMinionManager;
  import StarBreakerMod.minions.BaseFriendlyKaka;
  import StarBreakerMod.minions.ai.AbstractKakaAI;
@@ -83,12 +84,9 @@
      // Test
      public void onRightClick() {
          // TODO change to effect
-         AbstractDungeon.gridSelectScreen.open(
-                 this.kakaDeck,
-                 99,
-                 true,
-                 "View Kaka Deck"
-         );
+         if(!AbstractDungeon.isScreenUp) {
+             AbstractDungeon.effectList.add(new KakaStatScreenEffect(this));
+         }
      }
 
      public void SpawnKaka() {

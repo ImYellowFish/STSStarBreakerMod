@@ -32,5 +32,22 @@
 			" xp",
 			"Level Up"
 		]
+	},
+
+	"StarBreaker:KakaStatScreen": {
+		"TEXT": [
+			"Confirm",
+			"Cancel",
+			"Confirm Your Selection",
+			"Leave",
+			"Preview",
+			"Preview kaka's deck",
+			"Choose a card to upgrade"
+		]
+	},
+
+	"StarBreaker:KakaStatScreenEffect": {
+		"TEXT": [
+		]
 	}
 }

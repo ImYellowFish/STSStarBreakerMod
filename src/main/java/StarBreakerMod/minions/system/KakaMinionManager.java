@@ -11,11 +11,13 @@ import StarBreakerMod.minions.AbstractFriendlyMonster;
 import StarBreakerMod.minions.BaseFriendlyKaka;
 import StarBreakerMod.minions.ai.AbstractKakaAI;
 import StarBreakerMod.minions.ai.KakaAIFactory;
+import StarBreakerMod.patches.AbstractDungeonAddFieldsPatches;
 import StarBreakerMod.powers.KakaMinionAggroPower;
 import StarBreakerMod.powers.KakaMinionHookPower;
 import StarBreakerMod.powers.KakaMinionMiscPower;
 import StarBreakerMod.relics.KakaDogTag;
 import StarBreakerMod.rewards.RecruitableKakaReward;
+import StarBreakerMod.screens.KakaStatScreen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -63,7 +65,6 @@ public class KakaMinionManager{
     // Helpers
     public Random cardRandomRng;
     public KakaAIFactory kakaAIFactory = new KakaAIFactory();
-
 
     // ----------------------------------------
     // Constant values
@@ -115,6 +116,9 @@ public class KakaMinionManager{
         _instance = new KakaMinionManager();
     }
 
+    public static KakaStatScreen getKakaStatScreen(){
+        return AbstractDungeonAddFieldsPatches.f_kakaStatScreen.get(CardCrawlGame.dungeon);
+    }
 
     // Generate new kaka ID
     public int getNewKakaID(){
@@ -481,6 +485,14 @@ public class KakaMinionManager{
 //            AbstractDungeon.actionManager.addToBottom((AbstractGameAction)new VFXAction((AbstractGameEffect)new LightBulbEffect(dogTag.kaka.hb), 0.2F));
             AbstractDungeon.actionManager.addToBottom(new TextAboveCreatureAction(dogTag.kaka, this.TIP_STRINGS.TEXT[2]));
         }
+    }
+
+    public boolean onTrySmithKakaCard(KakaDogTag dogTag, AbstractCard c){
+        if(dogTag.kakaData.upgradePoint > 0){
+            dogTag.kakaData.upgradePoint--;
+            return true;
+        }
+        return false;
     }
 
 

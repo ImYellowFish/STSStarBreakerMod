@@ -15,7 +15,7 @@ public class KakaMinionData{
 
     public int level;
     public int exp;
-    public int levelPoint;
+    public int upgradePoint;
     public ArrayList<CardSave> cards;
 
     public void cloneTo(KakaMinionData newData){
@@ -27,7 +27,7 @@ public class KakaMinionData{
         newData.aiType = this.aiType;
         newData.level = this.level;
         newData.exp = this.exp;
-        newData.levelPoint = this.levelPoint;
+        newData.upgradePoint = this.upgradePoint;
 
         // Cards are not cloned, instead directly load/save to deck
         // newData.cards = (ArrayList<CardSave>) this.cards.clone();
@@ -39,6 +39,6 @@ public class KakaMinionData{
                 " NL ai:" + aiType +
                 " NL level:" + level +
                 " NL exp:" + exp +
-                " NL lvp:" + levelPoint;
+                " NL lvp:" + upgradePoint;
     }
 }
