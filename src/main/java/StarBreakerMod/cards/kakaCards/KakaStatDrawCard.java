@@ -17,6 +17,12 @@ public class KakaStatDrawCard extends KakaPlayableCard {
         this.kakaCardType = KakaCardType.BaseStat_Draw;
         this.magicNumber = this.baseMagicNumber = initDraw + timesUpgraded;
         this.timesUpgraded = timesUpgraded;
+
+        if(timesUpgraded > 0){
+            this.upgraded = true;
+            this.name = cardStrings.NAME + "+" + this.timesUpgraded;
+            initializeTitle();
+        }
     }
 
     public void OnKakaUseCard(BaseFriendlyKaka kaka, AbstractCreature m){

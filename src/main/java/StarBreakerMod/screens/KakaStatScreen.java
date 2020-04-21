@@ -64,7 +64,6 @@ public class KakaStatScreen
   public boolean forPreview = false;
   public boolean confirmScreenUp = false;
   public boolean isJustForConfirming = false;
-  public PeekButton peekButton = new PeekButton();
   private String tipMsg = "";
   private String lastTip = "";
   private float ritualAnimTimer = 0.0F;
@@ -76,6 +75,7 @@ public class KakaStatScreen
   public String cancelText;
   private ScrollBar scrollBar;
   private AbstractCard controllerCard = null;
+  public KakaDogTag kakaDogTag;
 
   private static final int ARROW_W = 64;
 
@@ -96,11 +96,6 @@ public class KakaStatScreen
 
   public void update() {
     updateControllerInput();
-    updatePeekButton();
-
-    if (PeekButton.isPeeking) {
-      return;
-    }
 
     if (Settings.isControllerMode && this.controllerCard != null && !CardCrawlGame.isPopupOpen && this.upgradePreviewCard == null) {
       if (Gdx.input.getY() > Settings.HEIGHT * 0.75F) {
@@ -128,14 +123,18 @@ public class KakaStatScreen
 
     this.confirmButton.update();
     this.cancelButton.update();
+//    StarBreakerMod.logger.info("cancel button update:" + this.cancelButton.hb.clicked);
 
 
     if (this.cancelButton.hb.clicked) {
       this.cancelButton.hb.clicked = false;
-      if (this.confirmScreenUp)
+      if (this.confirmScreenUp) {
+        this.confirmScreenUp = false;
         this.cancelUpgrade();
+      }
       else {
-        AbstractDungeon.closeCurrentScreen();
+        closeSelf();
+        return;
       }
     }
 
@@ -149,14 +148,14 @@ public class KakaStatScreen
         for (AbstractCard c : this.targetGroup.group) {
           AbstractDungeon.topLevelEffects.add(new FastCardObtainEffect(c, c.current_x, c.current_y));
         }
-        AbstractDungeon.closeCurrentScreen();
+        closeSelf();
       }
       return;
     }
     if ((this.anyNumber || this.forClarity) &&
             this.confirmButton.hb.clicked) {
       this.confirmButton.hb.clicked = false;
-      AbstractDungeon.closeCurrentScreen();
+      closeSelf();
 
       return;
     }
@@ -236,7 +235,7 @@ public class KakaStatScreen
                 this.tipMsg = TEXT[2];
                 this.cancelButton.show();
               } else {
-                AbstractDungeon.closeCurrentScreen();
+                closeSelf();
               }
               for (AbstractCard c : this.selectedCards)
                 c.stopGlowing();
@@ -248,29 +247,19 @@ public class KakaStatScreen
             if (this.forPreview) {
               this.hoveredCard.untip();
               this.hoveredCard.stopGlowing();
-              this.confirmScreenUp = true;
-              this.hoveredCard.current_x = Settings.WIDTH / 2.0F;
-              this.hoveredCard.target_x = Settings.WIDTH / 2.0F;
-              this.hoveredCard.current_y = Settings.HEIGHT / 2.0F;
-              this.hoveredCard.target_y = Settings.HEIGHT / 2.0F;
-              this.hoveredCard.update();
-              this.hoveredCard.targetDrawScale = 1.0F;
-              this.hoveredCard.drawScale = 1.0F;
-              this.selectedCards.clear();
-//              this.confirmButton.show();
-//              this.confirmButton.isDisabled = false;
-              this.lastTip = this.tipMsg;
-              this.tipMsg = TEXT[4];
               this.cancelButton.show();
-
               for (AbstractCard c : this.selectedCards)
                 c.stopGlowing();
+              CardCrawlGame.cardPopup.open(this.hoveredCard, this.kakaDogTag.kakaDeck);
+              this.hoveredCard = null;
+              this.cardSelectAmount = 0;
+              this.selectedCards.clear();
               return;
             }
 
             if (!this.anyNumber) {
 
-              AbstractDungeon.closeCurrentScreen();
+              closeSelf();
               if (AbstractDungeon.screen != AbstractDungeon.CurrentScreen.SHOP) {
                 this.cancelButton.hide();
               } else {
@@ -292,7 +281,7 @@ public class KakaStatScreen
               return;
             }
             if (this.cardSelectAmount < this.targetGroup.size() && this.anyNumber) {
-              AbstractDungeon.closeCurrentScreen();
+              closeSelf();
               if (AbstractDungeon.screen != AbstractDungeon.CurrentScreen.SHOP) {
                 this.cancelButton.hide();
               } else {
@@ -348,7 +337,8 @@ public class KakaStatScreen
         this.cancelButton.hide();
         this.confirmScreenUp = false;
         this.selectedCards.add(this.hoveredCard);
-        AbstractDungeon.closeCurrentScreen();
+
+        closeSelf();
       }
     }
 
@@ -362,8 +352,10 @@ public class KakaStatScreen
 
   }
 
-  private void updatePeekButton() {
-    this.peekButton.update();
+  private void closeSelf(){
+    // Hack, so the black screen can be cleaned up in AbstractDungeon
+    AbstractDungeon.screen = AbstractDungeon.CurrentScreen.GRID;
+    AbstractDungeon.closeCurrentScreen();
   }
 
   private void updateControllerInput() {
@@ -533,12 +525,14 @@ public class KakaStatScreen
 
   public void openForKaka(KakaDogTag kakaDogTag) {
     StarBreakerMod.logger.info("Open Kaka Stat:" + kakaDogTag.name + ", " + kakaDogTag.kakaData.upgradePoint);
+    this.kakaDogTag = kakaDogTag;
     if (kakaDogTag.kakaData.upgradePoint > 0) {
       open(kakaDogTag.kakaDeck, 1, TEXT[6], true, false, false, false);
       this.forPreview = false;
     } else {
       open(kakaDogTag.kakaDeck, 1, TEXT[5], false, false, true, false);
       this.forPreview = true;
+      this.cancelButton.isDisabled = false;
       this.cancelButton.show();
     }
   }
@@ -566,11 +560,6 @@ public class KakaStatScreen
     final float SHOW_X = 256.0F * Settings.scale;
     final float DRAW_Y = 128.0F * Settings.scale;
     this.cancelButton.updateText(TEXT[1]);
-
-    if ((AbstractDungeon.getCurrRoom()).phase == AbstractRoom.RoomPhase.COMBAT) {
-      this.peekButton.hideInstantly();
-      this.peekButton.show();
-    }
 
     calculateScrollBounds();
   }
@@ -635,7 +624,6 @@ public class KakaStatScreen
     AbstractDungeon.screen = AbstractDungeonPatches.SBM_KakaStat;
     AbstractDungeon.overlayMenu.showBlackScreen(0.75F);
     this.confirmButton.hideInstantly();
-    this.peekButton.hideInstantly();
     if (this.targetGroup.group.size() <= 5) {
       drawStartY = Settings.HEIGHT * 0.5F;
     } else {
@@ -648,15 +636,14 @@ public class KakaStatScreen
     AbstractDungeon.isScreenUp = true;
     AbstractDungeon.screen = AbstractDungeonPatches.SBM_KakaStat;
     AbstractDungeon.topPanel.unhoverHitboxes();
-    if (this.cancelWasOn && !this.isJustForConfirming && this.canCancel) {
-      this.cancelButton.updateText(this.cancelText);
-      this.cancelButton.show();
-    }
+    this.cancelButton.show();
     for (AbstractCard c : this.targetGroup.group) {
       c.targetDrawScale = 0.75F;
       c.drawScale = 0.75F;
       c.lighten(false);
     }
+    this.cardSelectAmount = 0;
+    this.numCards = 1;
     this.scrollBar.reset();
   }
 
@@ -851,7 +838,6 @@ public class KakaStatScreen
       this.confirmButton.render(sb);
     }
     this.cancelButton.render(sb);
-    this.peekButton.render(sb);
 
     if ((!this.isJustForConfirming || this.targetGroup.size() > 5) && !PeekButton.isPeeking) {
       FontHelper.renderDeckViewTip(sb, this.tipMsg, 96.0F * Settings.scale, Settings.CREAM_COLOR);

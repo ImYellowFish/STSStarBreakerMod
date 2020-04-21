@@ -39,11 +39,10 @@
      public void updateDescription() {
          KakaMinionManager mgr = KakaMinionManager.getInstance(AbstractDungeon.player);
          if(this.owner instanceof AbstractPlayer) {
-             this.description = "Total aggro:" + mgr.getAggro(this.owner) +
-                     ". NL IsTarget" + (mgr.aggroTarget == this.owner);
+             this.description = "Total aggro:" + mgr.getAggro(this.owner);
          }
          else if(this.owner instanceof  BaseFriendlyKaka){
-            this.description = ((BaseFriendlyKaka)this.owner).kakaData.toString();
+            this.description = ((BaseFriendlyKaka)this.owner).kakaData.toString() + "NL Total aggro:" + mgr.getAggro(this.owner);
          }
      }
  }

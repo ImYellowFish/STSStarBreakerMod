@@ -31,7 +31,7 @@ public class KakaStatScreenCancelButton {
 
 
     private String buttonText = "NOT_SET";
-    private static final float TEXT_OFFSET_X = 136.0F * Settings.scale;
+    private static final float TEXT_OFFSET_X = -136.0F * Settings.scale;
     private static final float TEXT_OFFSET_Y = 57.0F * Settings.scale;
 
 
@@ -41,7 +41,7 @@ public class KakaStatScreenCancelButton {
 
     public KakaStatScreenCancelButton(String label) {
         updateText(label);
-        this.hb.move(SHOW_X + 106.0F * Settings.scale, DRAW_Y + 60.0F * Settings.scale);
+        this.hb.move(SHOW_X - 106.0F * Settings.scale, DRAW_Y + 60.0F * Settings.scale);
     }
 
     public void updateText(String label) {
@@ -158,17 +158,17 @@ public class KakaStatScreenCancelButton {
     }
 
     private void renderShadow(SpriteBatch sb) {
-        sb.draw(ImageMaster.CONFIRM_BUTTON_SHADOW, this.current_x - 256.0F, DRAW_Y - 128.0F, 256.0F, 128.0F, 512.0F, 256.0F, Settings.scale, Settings.scale, 0.0F, 0, 0, 512, 256, false, false);
+        sb.draw(ImageMaster.CONFIRM_BUTTON_SHADOW, this.current_x - 256.0F, DRAW_Y - 128.0F, 256.0F, 128.0F, 512.0F, 256.0F, Settings.scale, Settings.scale, 0.0F, 0, 0, 512, 256, true, false);
     }
 
 
     private void renderOutline(SpriteBatch sb) {
-        sb.draw(ImageMaster.CONFIRM_BUTTON_OUTLINE, this.current_x - 256.0F, DRAW_Y - 128.0F, 256.0F, 128.0F, 512.0F, 256.0F, Settings.scale, Settings.scale, 0.0F, 0, 0, 512, 256, false, false);
+        sb.draw(ImageMaster.CONFIRM_BUTTON_OUTLINE, this.current_x - 256.0F, DRAW_Y - 128.0F, 256.0F, 128.0F, 512.0F, 256.0F, Settings.scale, Settings.scale, 0.0F, 0, 0, 512, 256, true, false);
     }
 
 
     private void renderButton(SpriteBatch sb) {
-        sb.draw(ImageMaster.CONFIRM_BUTTON, this.current_x - 256.0F, DRAW_Y - 128.0F, 256.0F, 128.0F, 512.0F, 256.0F, Settings.scale, Settings.scale, 0.0F, 0, 0, 512, 256, false, false);
+        sb.draw(ImageMaster.CONFIRM_BUTTON, this.current_x - 256.0F, DRAW_Y - 128.0F, 256.0F, 128.0F, 512.0F, 256.0F, Settings.scale, Settings.scale, 0.0F, 0, 0, 512, 256, true, false);
     }
 
 
@@ -176,7 +176,7 @@ public class KakaStatScreenCancelButton {
         if (Settings.isControllerMode) {
             sb.setColor(Color.WHITE);
             sb.draw(CInputActionSet.proceed
-                    .getKeyImg(), this.current_x - 32.0F - this.controller_offset_x + 96.0F * Settings.scale, DRAW_Y - 32.0F + 57.0F * Settings.scale, 32.0F, 32.0F, 64.0F, 64.0F, Settings.scale, Settings.scale, 0.0F, 0, 0, 64, 64, false, false);
+                    .getKeyImg(), this.current_x - 32.0F - this.controller_offset_x + 96.0F * Settings.scale, DRAW_Y - 32.0F + 57.0F * Settings.scale, 32.0F, 32.0F, 64.0F, 64.0F, Settings.scale, Settings.scale, 0.0F, 0, 0, 64, 64, true, false);
         }
     }
 }

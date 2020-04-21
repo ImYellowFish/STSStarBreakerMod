@@ -33,7 +33,7 @@
      public KakaStatScreenEffect(KakaDogTag kakaDogTag) {
          this.kakaDogTag = kakaDogTag;
 
-         this.duration = 1.5F;
+         this.duration = 1.1F;
 //     AbstractDungeon.overlayMenu.proceedButton.hide();
      }
 
@@ -67,7 +67,7 @@
 //             else {
 //                 ((RestRoom) AbstractDungeon.getCurrRoom()).fadeIn();
 //             }
-             ((RestRoom) AbstractDungeon.getCurrRoom()).fadeIn();
+//             ((RestRoom) AbstractDungeon.getCurrRoom()).fadeIn();
          }
 
 

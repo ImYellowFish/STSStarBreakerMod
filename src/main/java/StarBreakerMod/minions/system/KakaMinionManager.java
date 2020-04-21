@@ -279,9 +279,9 @@ public class KakaMinionManager{
             ));
         });
         AbstractPlayer p = this.player;
-//        AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
-//                p, p, (AbstractPower)new KakaMinionMiscPower(p)
-//        ));
+        AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
+                p, p, (AbstractPower)new KakaMinionMiscPower(p)
+        ));
         AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
                 p, p, (AbstractPower)new KakaMinionHookPower(p)
         ));
@@ -321,8 +321,8 @@ public class KakaMinionManager{
 
         CardGroup kakaDeck = new CardGroup(CardGroup.CardGroupType.MASTER_DECK);
         // Add base stat
-        kakaDeck.addToTop(new KakaStatEnergyCard(INIT_ENERGY_PER_TURN, 0));
-        kakaDeck.addToTop(new KakaStatDrawCard(INIT_DRAW_PER_TURN, 0));
+        kakaDeck.addToTop(new KakaStatEnergyCard(0, INIT_ENERGY_PER_TURN));
+        kakaDeck.addToTop(new KakaStatDrawCard(0, INIT_DRAW_PER_TURN));
 
         // Add kaka base cards
         kakaDeck.addToTop(new KakaStrikeCard());
@@ -429,7 +429,7 @@ public class KakaMinionManager{
 
     public void updateAggroInfo(AbstractCreature p, int newAggro){
         if(p == this.maxAggroTarget){
-            this.maxAggro = newAggro;
+            this.maxAggro = Math.max(this.maxAggro, newAggro);
         }
         else if(newAggro > this.maxAggro){
             this.maxAggroTarget = p;
