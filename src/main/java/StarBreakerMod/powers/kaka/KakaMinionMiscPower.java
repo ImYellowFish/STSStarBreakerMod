@@ -1,4 +1,4 @@
- package StarBreakerMod.powers;
+ package StarBreakerMod.powers.kaka;
  
  import StarBreakerMod.minions.system.KakaMinionManager;
  import StarBreakerMod.minions.BaseFriendlyKaka;
@@ -31,8 +31,6 @@
      }
 
      public void onAttack(DamageInfo info, int damageAmount, AbstractCreature target) {
-         KakaMinionManager.getInstance(AbstractDungeon.player).addAggro(
-                 this.owner, damageAmount * KakaMinionManager.AGGRO_PER_DAMAGE);
          this.updateDescription();
      }
 
@@ -42,7 +40,7 @@
              this.description = "Total aggro:" + mgr.getAggro(this.owner);
          }
          else if(this.owner instanceof  BaseFriendlyKaka){
-            this.description = ((BaseFriendlyKaka)this.owner).kakaData.toString() + "NL Total aggro:" + mgr.getAggro(this.owner);
+            this.description = ((BaseFriendlyKaka)this.owner).kakaData.toString() + " NL Total aggro:" + mgr.getAggro(this.owner);
          }
      }
  }

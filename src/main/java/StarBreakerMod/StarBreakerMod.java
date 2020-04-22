@@ -1,10 +1,7 @@
 package StarBreakerMod;
 
 import StarBreakerMod.cards.*;
-import StarBreakerMod.cards.kakaCards.KakaDefendCard;
-import StarBreakerMod.cards.kakaCards.KakaStatDrawCard;
-import StarBreakerMod.cards.kakaCards.KakaStatEnergyCard;
-import StarBreakerMod.cards.kakaCards.KakaStrikeCard;
+import StarBreakerMod.cards.kakaCards.*;
 import StarBreakerMod.events.BountyHunterEvent;
 import StarBreakerMod.events.HadesTrialEvent;
 import StarBreakerMod.minions.system.KakaMinionManager;
@@ -12,7 +9,9 @@ import StarBreakerMod.helpers.StarBreakerSetupHelper;
 import StarBreakerMod.monsters.BookOfNursing;
 import StarBreakerMod.monsters.GayCenturion;
 import StarBreakerMod.patches.AbstractCardEnumPatches;
+import StarBreakerMod.patches.RewardTypePatches;
 import StarBreakerMod.relics.*;
+import StarBreakerMod.rewards.KakaSingleCardReward;
 import basemod.BaseMod;
 import basemod.helpers.RelicType;
 import basemod.interfaces.*;
@@ -21,12 +20,15 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.dungeons.Exordium;
 import com.megacrit.cardcrawl.dungeons.TheCity;
 import com.megacrit.cardcrawl.helpers.CardHelper;
+import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.localization.*;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
 import com.megacrit.cardcrawl.monsters.MonsterInfo;
 import com.megacrit.cardcrawl.monsters.city.Healer;
+import com.megacrit.cardcrawl.rewards.RewardItem;
+import com.megacrit.cardcrawl.rewards.RewardSave;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
 import com.megacrit.cardcrawl.unlock.UnlockTracker;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
@@ -53,7 +55,7 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
 
     public static void initialize(){
         new StarBreakerMod();
-//        addCustomColor();
+        addCustomColor();
         KakaMinionManager.InitializeInstance();
     }
 
@@ -108,7 +110,7 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
         UnlockTracker.unlockCard(ClashMasteryCard.ID);
 
         // Kaka cards
-        BaseMod.addCard(new KakaStatEnergyCard(1,0));
+        BaseMod.addCard(new KakaStatEnergyCard(0,0));
         UnlockTracker.unlockCard(KakaStatEnergyCard.ID);
 
         BaseMod.addCard(new KakaStatDrawCard(1,0));
@@ -119,6 +121,18 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
 
         BaseMod.addCard(new KakaDefendCard());
         UnlockTracker.unlockCard(KakaDefendCard.ID);
+
+        BaseMod.addCard(new KakaClashCard());
+        UnlockTracker.unlockCard(KakaClashCard.ID);
+
+        BaseMod.addCard(new KakaRageCard());
+        UnlockTracker.unlockCard(KakaRageCard.ID);
+
+        BaseMod.addCard(new KakaSearingBlowCard());
+        UnlockTracker.unlockCard(KakaSearingBlowCard.ID);
+
+        // Add kaka cards to reward drop pool
+        KakaMinionManager.getInstance().kakaRewardFactory.initialize();
     }
 
     @Override
@@ -179,6 +193,18 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
 
         // Add special events (will not be randomly generated)
         BaseMod.addEvent(BountyHunterEvent.ID, BountyHunterEvent.class, "Special");
+
+
+        // add rewards
+        BaseMod.registerCustomReward(RewardTypePatches.SBM_NEW_KAKA_CARD, (save)->{
+            KakaDogTag dogTag = KakaMinionManager.getInstance().getDogTagByID(save.amount);
+            AbstractCard card = CardLibrary.getCard(save.id).makeCopy();
+            return new KakaSingleCardReward(dogTag, card);
+        }, (reward)->{
+            KakaSingleCardReward r = (KakaSingleCardReward)reward;
+            return new RewardSave( r.type.toString(), r.card.cardID, r.dogTag.dogTagID, 0);
+        });
+
     }
 
 
@@ -200,15 +226,15 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
                 BLUE_DESC_BOX_COLOR,
                 BLUE_TRAIL_VFX_COLOR,
                 BLUE_BORDER_GLOW_COLOR,
-                ImageMaster.CARD_ATTACK_BG_BLUE.name,
-                ImageMaster.CARD_SKILL_BG_BLUE.name,
-                ImageMaster.CARD_POWER_BG_BLUE.name,
-                ImageMaster.CARD_COLORLESS_ORB.name,
-                ImageMaster.CARD_ATTACK_BG_BLUE_L.name,
-                ImageMaster.CARD_SKILL_BG_BLUE_L.name,
-                ImageMaster.CARD_POWER_BG_BLUE_L.name,
-                ImageMaster.CARD_GRAY_ORB_L.name,
-                "blue"
+                "StarBreakerImages/kaka_color/bg_attack_kaka.png",
+                "StarBreakerImages/kaka_color/bg_skill_kaka.png",
+                "StarBreakerImages/kaka_color/bg_power_kaka.png",
+                "StarBreakerImages/kaka_color/card_kaka_orb.png",
+                "StarBreakerImages/kaka_color/bg_attack_kaka_large.png",
+                "StarBreakerImages/kaka_color/bg_skill_kaka_large.png",
+                "StarBreakerImages/kaka_color/bg_power_kaka_large.png",
+                "StarBreakerImages/kaka_color/card_kaka_orb_large.png",
+                "StarBreakerImages/kaka_color/card_small_kaka_orb.png"
         );
     }
 }

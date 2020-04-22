@@ -1,4 +1,5 @@
  package StarBreakerMod.relics;
+ import StarBreakerMod.effects.KakaStatScreenEffect;
  import StarBreakerMod.minions.system.KakaMinionManager;
  import basemod.abstracts.CustomRelic;
  import basemod.abstracts.CustomSavable;
@@ -29,7 +30,9 @@
      public void onRightClick() {
          // Test: spawn a kaka dogTag rewardItem
          flash();
-         KakaMinionManager.getInstance(AbstractDungeon.player).AddRecruitableKakaReward();
+         if(!AbstractDungeon.isScreenUp) {
+             KakaMinionManager.getKakaDebugScreen().open();
+         }
      }
 
     // Team management

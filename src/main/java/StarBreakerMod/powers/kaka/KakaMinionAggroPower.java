@@ -1,4 +1,4 @@
- package StarBreakerMod.powers;
+ package StarBreakerMod.powers.kaka;
  
  import com.megacrit.cardcrawl.core.AbstractCreature;
  import com.megacrit.cardcrawl.core.CardCrawlGame;

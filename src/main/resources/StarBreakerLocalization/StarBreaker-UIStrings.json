@@ -14,7 +14,10 @@
 	"StarBreaker:RewardItem": {
 		"TEXT": [
 			"Recruit a new kaka (",
-			" Gold)"
+			" Gold)",
+			" #b",
+			" found #y",
+			" in the garbage"
 		]
 	},
 
@@ -41,8 +44,18 @@
 			"Confirm Your Selection",
 			"Leave",
 			"Preview",
+
 			"Preview kaka's deck",
-			"Choose a card to upgrade"
+			"Choose a card to upgrade",
+			"Upgrade",
+			"Purge",
+			"",
+
+			"  Level: #y",
+			"  HP: #y",
+			" / #y",
+			"  Available Upgrade Point: #y",
+			"Cost: #y"
 		]
 	},
 

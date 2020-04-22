@@ -24,16 +24,16 @@
 //     private static final UIStrings uiStrings = CardCrawlGame.languagePack.getUIString("StarBreaker:KakaStatScreenEffect");
 //     public static final String[] TEXT = uiStrings.TEXT;
 
-     private static final float DUR = 1.5F;
+     private static final float DUR = 1.1F;
      private boolean openedScreen = false;
+
 
      public KakaDogTag kakaDogTag;
 
 
      public KakaStatScreenEffect(KakaDogTag kakaDogTag) {
          this.kakaDogTag = kakaDogTag;
-
-         this.duration = 1.1F;
+         this.duration = DUR;
 //     AbstractDungeon.overlayMenu.proceedButton.hide();
      }
 
@@ -59,15 +59,6 @@
                  }
              }
              screen.selectedCards.clear();
-//             if(this.kakaDogTag.kakaData.upgradePoint > 0){
-//                 // If there are still cards to upgrade, keep open
-//                 this.openedScreen = true;
-//                 KakaMinionManager.getKakaStatScreen().openForKaka(this.kakaDogTag);
-//             }
-//             else {
-//                 ((RestRoom) AbstractDungeon.getCurrRoom()).fadeIn();
-//             }
-//             ((RestRoom) AbstractDungeon.getCurrRoom()).fadeIn();
          }
 
 
@@ -78,7 +69,14 @@
 
 
          if (this.duration < 0.0F) {
-             this.isDone = true;
+             if(this.kakaDogTag.kakaData.upgradePoint > 0 && (screen.forUpgrade || screen.forPurge)){
+                 // If there are still cards to upgrade, keep open
+                 this.duration = DUR;
+                 this.openedScreen = true;
+                 KakaMinionManager.getKakaStatScreen().openForKaka(this.kakaDogTag, screen.forUpgrade, screen.forPurge);
+             }else {
+                 this.isDone = true;
+             }
          }
      }
 

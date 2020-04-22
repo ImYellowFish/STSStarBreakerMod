@@ -1,9 +1,12 @@
 package StarBreakerMod.cards.kakaCards;
 
 import StarBreakerMod.minions.BaseFriendlyKaka;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 
@@ -43,15 +46,25 @@ public abstract class KakaPlayableCard extends CustomCard {
     // ----------------------------------------
 
     public KakaPlayableCard(String id, String name, String img, int cost, String rawDescription, CardType type, CardColor color, CardRarity rarity, CardTarget target) {
-        super(id, name, img, cost, rawDescription, type, color, rarity, target);
+        super(id, name, new CustomCard.RegionName(img), cost, rawDescription, type, color, rarity, target);
     }
     public KakaPlayableCard(String id, String name, CustomCard.RegionName img, int cost, String rawDescription, CardType type, CardColor color, CardRarity rarity, CardTarget target) {
+        super(id, name, img, cost, rawDescription, type, color, rarity, target);
+    }
+    public KakaPlayableCard(String id, String name, String img, int cost, String rawDescription, CardType type, CardColor color, CardRarity rarity, CardTarget target, boolean useCustomImg) {
         super(id, name, img, cost, rawDescription, type, color, rarity, target);
     }
 
     // ----------------------------------------
     // Kaka card utilities
     // ----------------------------------------
+    public TextureAtlas.AtlasRegion getCardBgAtlas() {
+        TextureAtlas.AtlasRegion result = super.getCardBgAtlas();
+        if(result == null)
+            result = ImageMaster.CARD_POWER_BG_SILHOUETTE;
+        return result;
+    }
+
     protected void applyKakaPowersToBlock(BaseFriendlyKaka kaka) {
         this.isBlockModified = false;
         float tmp = this.baseBlock;

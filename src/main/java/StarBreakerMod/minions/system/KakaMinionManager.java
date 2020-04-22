@@ -11,12 +11,14 @@ import StarBreakerMod.minions.AbstractFriendlyMonster;
 import StarBreakerMod.minions.BaseFriendlyKaka;
 import StarBreakerMod.minions.ai.AbstractKakaAI;
 import StarBreakerMod.minions.ai.KakaAIFactory;
+import StarBreakerMod.minions.ai.KakaRandomRewardFactory;
 import StarBreakerMod.patches.AbstractDungeonAddFieldsPatches;
-import StarBreakerMod.powers.KakaMinionAggroPower;
-import StarBreakerMod.powers.KakaMinionHookPower;
-import StarBreakerMod.powers.KakaMinionMiscPower;
+import StarBreakerMod.powers.kaka.KakaMinionAggroPower;
+import StarBreakerMod.powers.kaka.KakaMinionHookPower;
+import StarBreakerMod.powers.kaka.KakaMinionMiscPower;
 import StarBreakerMod.relics.KakaDogTag;
 import StarBreakerMod.rewards.RecruitableKakaReward;
+import StarBreakerMod.screens.KakaDebugScreen;
 import StarBreakerMod.screens.KakaStatScreen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -38,6 +40,7 @@ import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.random.Random;
+import com.megacrit.cardcrawl.rewards.RewardItem;
 import com.megacrit.cardcrawl.rooms.MonsterRoom;
 import com.megacrit.cardcrawl.vfx.SpeechBubble;
 import com.megacrit.cardcrawl.vfx.TextAboveCreatureEffect;
@@ -65,6 +68,7 @@ public class KakaMinionManager{
     // Helpers
     public Random cardRandomRng;
     public KakaAIFactory kakaAIFactory = new KakaAIFactory();
+    public KakaRandomRewardFactory kakaRewardFactory = new KakaRandomRewardFactory();
 
     // ----------------------------------------
     // Constant values
@@ -120,6 +124,10 @@ public class KakaMinionManager{
         return AbstractDungeonAddFieldsPatches.f_kakaStatScreen.get(CardCrawlGame.dungeon);
     }
 
+    public static KakaDebugScreen getKakaDebugScreen(){
+        return AbstractDungeonAddFieldsPatches.f_kakaDebugScreen.get(CardCrawlGame.dungeon);
+    }
+
     // Generate new kaka ID
     public int getNewKakaID(){
         return this.dogTags.size();
@@ -144,6 +152,9 @@ public class KakaMinionManager{
         clearAggro();
     }
 
+    public KakaDogTag getDogTagByID(int id){
+        return this.dogTags.get(id);
+    }
 
     // ----------------------------------------
     // Inherited player system subscriber
@@ -184,6 +195,15 @@ public class KakaMinionManager{
 
             // try to drop some traits or cards
             dogTag.kakaAI.onVictory();
+        }
+
+        // drop random cards and traits
+        for(KakaDogTag dogTag : this.dogTags){
+            RewardItem reward = dogTag.kakaAI.getRandomDrops();
+            if(reward != null){
+                AbstractDungeon.getCurrRoom().rewards.add(reward);
+                break;
+            }
         }
     }
 
@@ -275,15 +295,18 @@ public class KakaMinionManager{
         this.battleKakaGroup.monsters.forEach(monster->{
             BaseFriendlyKaka kaka = (BaseFriendlyKaka)monster;
             AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
+                    kaka, kaka, (AbstractPower)new KakaMinionHookPower(kaka)
+            ));
+            AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
                     kaka, kaka, (AbstractPower)new KakaMinionMiscPower(kaka)
             ));
         });
         AbstractPlayer p = this.player;
         AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
-                p, p, (AbstractPower)new KakaMinionMiscPower(p)
+                p, p, (AbstractPower)new KakaMinionHookPower(p)
         ));
         AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(
-                p, p, (AbstractPower)new KakaMinionHookPower(p)
+                p, p, (AbstractPower)new KakaMinionMiscPower(p)
         ));
     }
 
@@ -488,13 +511,21 @@ public class KakaMinionManager{
     }
 
     public boolean onTrySmithKakaCard(KakaDogTag dogTag, AbstractCard c){
-        if(dogTag.kakaData.upgradePoint > 0){
+        if(canKakaSmithCard(dogTag, c)){
             dogTag.kakaData.upgradePoint--;
+            this.player.loseGold(getKakaSmithCardCost(dogTag, c));
             return true;
         }
         return false;
     }
 
+    public int getKakaSmithCardCost(KakaDogTag dogTag, AbstractCard c){
+        return 20;
+    }
+
+    public boolean canKakaSmithCard(KakaDogTag dogTag, AbstractCard c){
+        return dogTag.kakaData.upgradePoint > 0 && getKakaSmithCardCost(dogTag, c) <= this.player.gold;
+    }
 
     // ----------------------------------------
     // Talk

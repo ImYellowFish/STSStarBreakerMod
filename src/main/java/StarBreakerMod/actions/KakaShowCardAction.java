@@ -5,6 +5,7 @@
  import com.megacrit.cardcrawl.core.AbstractCreature;
  import com.megacrit.cardcrawl.core.Settings;
  import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+ import com.megacrit.cardcrawl.vfx.cardManip.ExhaustCardEffect;
  import com.megacrit.cardcrawl.vfx.cardManip.ShowCardBrieflyEffect;
 
  public class KakaShowCardAction
@@ -20,7 +21,11 @@
 
      public void update() {
          if (this.target != null && this.duration == Settings.ACTION_DUR_MED) {
-             AbstractDungeon.topLevelEffectsQueue.add(new ShowCardBrieflyEffect(this.theCard.makeStatEquivalentCopy()));
+             AbstractCard c = this.theCard.makeStatEquivalentCopy();
+             AbstractDungeon.topLevelEffectsQueue.add(new ShowCardBrieflyEffect(c));
+             if(this.theCard.exhaust){
+                 AbstractDungeon.topLevelEffectsQueue.add(new ExhaustCardEffect(c));
+             }
          }
          tickDuration();
      }

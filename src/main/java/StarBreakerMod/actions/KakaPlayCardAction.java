@@ -3,6 +3,7 @@
  import StarBreakerMod.StarBreakerMod;
  import StarBreakerMod.cards.kakaCards.KakaPlayableCard;
  import StarBreakerMod.minions.BaseFriendlyKaka;
+ import StarBreakerMod.powers.kaka.AbstractKakaMinionPower;
  import com.megacrit.cardcrawl.actions.AbstractGameAction;
  import com.megacrit.cardcrawl.actions.animations.AnimateSlowAttackAction;
  import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -10,6 +11,7 @@
  import com.megacrit.cardcrawl.core.AbstractCreature;
  import com.megacrit.cardcrawl.core.Settings;
  import com.megacrit.cardcrawl.monsters.AbstractMonster;
+ import com.megacrit.cardcrawl.powers.AbstractPower;
 
  public class KakaPlayCardAction
    extends AbstractGameAction {
@@ -38,6 +40,18 @@
              // play the card
              logCard();
              ((KakaPlayableCard) this.card).OnKakaUseCard(kaka, target);
+
+             // If required. exhaust
+             if(this.card.exhaust || this.card.type == AbstractCard.CardType.POWER){
+                 kaka.AI.onCardRemovedFromBattle(this.card);
+             }
+
+             // call on play card power
+             for(AbstractPower power : kaka.powers){
+                 if(power instanceof AbstractKakaMinionPower){
+                    ((AbstractKakaMinionPower) power).onKakaUseCard(this.card, this);
+                 }
+             }
 
              // call afterPlayCard callback
              addToBot((AbstractGameAction) new KakaPostPlayCardAction(kaka, this.target, this.card));

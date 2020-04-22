@@ -1,9 +1,11 @@
 package StarBreakerMod.screens;
 
 import StarBreakerMod.StarBreakerMod;
+import StarBreakerMod.minions.system.KakaMinionManager;
 import StarBreakerMod.patches.AbstractDungeonPatches;
 import StarBreakerMod.relics.KakaDogTag;
 import StarBreakerMod.ui.KakaStatScreenCancelButton;
+import StarBreakerMod.ui.SBMGeneralToggleButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,12 +18,10 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.helpers.MathHelper;
-import com.megacrit.cardcrawl.helpers.RelicLibrary;
 import com.megacrit.cardcrawl.helpers.controller.CInputActionSet;
 import com.megacrit.cardcrawl.helpers.controller.CInputHelper;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
 import com.megacrit.cardcrawl.localization.UIStrings;
-import com.megacrit.cardcrawl.relics.AbstractRelic;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
 import com.megacrit.cardcrawl.screens.mainMenu.ScrollBar;
 import com.megacrit.cardcrawl.screens.mainMenu.ScrollBarListener;
@@ -36,8 +36,16 @@ import java.util.ArrayList;
 
 public class KakaStatScreen
         implements ScrollBarListener {
+
+  // ----------------------------------------
+  // Constants
+  // ----------------------------------------
   private static final UIStrings uiStrings = CardCrawlGame.languagePack.getUIString("StarBreaker:KakaStatScreen");
   public static final String[] TEXT = uiStrings.TEXT;
+
+  // ----------------------------------------
+  // Draw variables
+  // ----------------------------------------
   private static float drawStartX;
   private static float drawStartY;
   private static float padX;
@@ -46,41 +54,124 @@ public class KakaStatScreen
   private static final float SCROLL_BAR_THRESHOLD = 500.0F * Settings.scale;
   private float grabStartY = 0.0F;
   private float currentDiffY = 0.0F;
-  public ArrayList<AbstractCard> selectedCards = new ArrayList<>();
-  public CardGroup targetGroup;
-  private AbstractCard hoveredCard = null;
-  public AbstractCard upgradePreviewCard = null;
-  private int numCards = 0;
-  private int cardSelectAmount = 0;
   private float scrollLowerBound = -Settings.DEFAULT_SCROLL_LIMIT;
   private float scrollUpperBound = Settings.DEFAULT_SCROLL_LIMIT;
-  private boolean grabbedScreen = false;
-  private boolean canCancel = true;
-  public boolean forUpgrade = false;
+  private static final int ARROW_W = 64;
+  private float arrowScale1 = 1.0F, arrowScale2 = 1.0F, arrowScale3 = 1.0F, arrowTimer = 0.0F;
+
+  private float ritualAnimTimer = 0.0F;
+  private static final float RITUAL_ANIM_INTERVAL = 0.1F;
+
+  private static final float KAKA_STAT_START_X = Settings.WIDTH * 0.15F;
+  private static final float KAKA_STAT_START_Y = Settings.HEIGHT * 0.75F;
+
+  private static final float TOGGLE_DX = 150.0f;
+  private static final float TOGGLE_DY = 500.0f;
+  private static final float SCREEN_CENTER_Y = Settings.HEIGHT / 2.0F - 64.0F * Settings.scale;
+
+
   public GridSelectConfirmButton confirmButton = new GridSelectConfirmButton(TEXT[0]);
   public KakaStatScreenCancelButton cancelButton = new KakaStatScreenCancelButton(TEXT[1]);
+  private ScrollBar scrollBar;
+
+  // ----------------------------------------
+  // UI States
+  // ----------------------------------------
+  // Mode
+  private boolean canCancel = true;
+  public boolean forUpgrade = false;
   public boolean forTransform = false;
   public boolean forPurge = false;
   public boolean forPreview = false;
-  public boolean confirmScreenUp = false;
+
+  // Toggles
+  // preview, upgrade, remove
+  public SBMGeneralToggleButton[] toggles;
+
+  // Misc
   public boolean isJustForConfirming = false;
-  private String tipMsg = "";
-  private String lastTip = "";
-  private float ritualAnimTimer = 0.0F;
-  private static final float RITUAL_ANIM_INTERVAL = 0.1F;
-  private int prevDeckSize = 0;
-  public boolean cancelWasOn = false;
   public boolean anyNumber = false;
   public boolean forClarity = false;
-  public String cancelText;
-  private ScrollBar scrollBar;
+  private String tipMsg = "";
+
+  // Card selection
+  private int numCards = 0;
+  private int cardSelectAmount = 0;
+  public ArrayList<AbstractCard> selectedCards = new ArrayList<>();
+  private AbstractCard hoveredCard = null;
+  public AbstractCard upgradePreviewCard = null;
   private AbstractCard controllerCard = null;
+
+  // Screen stats
+  private boolean grabbedScreen = false;
+  public boolean confirmScreenUp = false;
+
+  // Reopen
+  public boolean cancelWasOn = false;
+  public String cancelText;
+  private String lastTip = "";
+  private int prevDeckSize = 0;
+
+
+  // ----------------------------------------
+  // Data
+  // ----------------------------------------
   public KakaDogTag kakaDogTag;
+  public CardGroup targetGroup;
 
-  private static final int ARROW_W = 64;
 
-  private float arrowScale1 = 1.0F, arrowScale2 = 1.0F, arrowScale3 = 1.0F, arrowTimer = 0.0F;
+  // ----------------------------------------
+  // Interface: Open
+  // ----------------------------------------
+  public void openForKaka(KakaDogTag kakaDogTag) {
+    StarBreakerMod.logger.info("Open Kaka Stat:" + kakaDogTag.name + ", " + kakaDogTag.kakaData.upgradePoint);
+    this.kakaDogTag = kakaDogTag;
+    open(kakaDogTag.kakaDeck, 1, TEXT[6], false, false, true, false);
+    this.forPreview = true;
+    this.cancelButton.isDisabled = false;
+    this.cancelButton.show();
+    this.createToggles();
+  }
 
+  public void openForKaka(KakaDogTag kakaDogTag, boolean forUpgrade, boolean forPurge) {
+    StarBreakerMod.logger.info("Open Kaka Stat:" + kakaDogTag.name + ", " + kakaDogTag.kakaData.upgradePoint);
+    openForKaka(kakaDogTag);
+    this.forPreview = !(forPurge || forUpgrade);
+    this.forPurge = forPurge;
+    this.forUpgrade = forUpgrade;
+  }
+
+  public void open(CardGroup group, int numCards, String tipMsg, boolean forUpgrade, boolean forTransform, boolean canCancel, boolean forPurge) {
+    this.targetGroup = group;
+    callOnOpen();
+
+
+    this.forUpgrade = forUpgrade;
+    this.forTransform = forTransform;
+    this.canCancel = canCancel;
+    this.forPurge = forPurge;
+    this.tipMsg = tipMsg;
+    this.numCards = numCards;
+
+    if ((forUpgrade || forTransform || forPurge || AbstractDungeon.previousScreen == AbstractDungeon.CurrentScreen.SHOP) && canCancel) {
+      this.cancelButton.show();
+    }
+
+    if (!canCancel) {
+      this.cancelButton.hide();
+    }
+
+    final float SHOW_X = 256.0F * Settings.scale;
+    final float DRAW_Y = 128.0F * Settings.scale;
+    this.cancelButton.updateText(TEXT[1]);
+
+    calculateScrollBounds();
+  }
+
+
+  // ----------------------------------------
+  // Interface: update & render
+  // ----------------------------------------
   public KakaStatScreen() {
     drawStartX = Settings.WIDTH;
     drawStartX -= 5.0F * AbstractCard.IMG_WIDTH * 0.75F;
@@ -96,6 +187,9 @@ public class KakaStatScreen
 
   public void update() {
     updateControllerInput();
+    for(SBMGeneralToggleButton t : this.toggles){
+      t.update();
+    }
 
     if (Settings.isControllerMode && this.controllerCard != null && !CardCrawlGame.isPopupOpen && this.upgradePreviewCard == null) {
       if (Gdx.input.getY() > Settings.HEIGHT * 0.75F) {
@@ -133,6 +227,7 @@ public class KakaStatScreen
         this.cancelUpgrade();
       }
       else {
+        resetOnToggle();
         closeSelf();
         return;
       }
@@ -196,7 +291,7 @@ public class KakaStatScreen
               this.selectedCards.clear();
               this.cancelButton.show();
               this.confirmButton.show();
-              this.confirmButton.isDisabled = false;
+              this.confirmButton.isDisabled = !canKakaSmithCard(this.hoveredCard);
               this.lastTip = this.tipMsg;
               this.tipMsg = TEXT[2];
               return;
@@ -211,7 +306,7 @@ public class KakaStatScreen
               this.selectedCards.clear();
               this.cancelButton.show();
               this.confirmButton.show();
-              this.confirmButton.isDisabled = false;
+              this.confirmButton.isDisabled = !canKakaSmithCard(this.hoveredCard);
               this.lastTip = this.tipMsg;
               this.tipMsg = TEXT[2];
               return;
@@ -230,7 +325,7 @@ public class KakaStatScreen
                 this.hoveredCard.drawScale = 1.0F;
                 this.selectedCards.clear();
                 this.confirmButton.show();
-                this.confirmButton.isDisabled = false;
+                this.confirmButton.isDisabled = !canKakaSmithCard(this.hoveredCard);
                 this.lastTip = this.tipMsg;
                 this.tipMsg = TEXT[2];
                 this.cancelButton.show();
@@ -350,6 +445,183 @@ public class KakaStatScreen
       }
     }
 
+  }
+
+
+  public void render(SpriteBatch sb) {
+    if (shouldShowScrollBar()) {
+      this.scrollBar.render(sb);
+    }
+
+    if (!PeekButton.isPeeking) {
+      if (this.hoveredCard != null) {
+        if ((AbstractDungeon.getCurrRoom()).phase == AbstractRoom.RoomPhase.COMBAT) {
+          this.targetGroup.renderExceptOneCard(sb, this.hoveredCard);
+        } else {
+          this.targetGroup.renderExceptOneCardShowBottled(sb, this.hoveredCard);
+        }
+
+        this.hoveredCard.renderHoverShadow(sb);
+        this.hoveredCard.render(sb);
+
+        if ((AbstractDungeon.getCurrRoom()).phase != AbstractRoom.RoomPhase.COMBAT) {
+          // handle bottles
+        }
+        this.hoveredCard.renderCardTip(sb);
+      } else if ((AbstractDungeon.getCurrRoom()).phase == AbstractRoom.RoomPhase.COMBAT) {
+        this.targetGroup.render(sb);
+      } else {
+        this.targetGroup.renderShowBottled(sb);
+      }
+    }
+
+    renderKakaStat(sb);
+
+    if (this.confirmScreenUp) {
+      sb.setColor(new Color(0.0F, 0.0F, 0.0F, 0.8F));
+      sb.draw(ImageMaster.WHITE_SQUARE_IMG, 0.0F, 0.0F, Settings.WIDTH, Settings.HEIGHT - 64.0F * Settings.scale);
+
+      if (this.forTransform || this.forUpgrade) {
+        renderArrows(sb);
+
+        this.hoveredCard.current_x = Settings.WIDTH * 0.36F;
+        this.hoveredCard.current_y = Settings.HEIGHT / 2.0F;
+        this.hoveredCard.target_x = Settings.WIDTH * 0.36F;
+        this.hoveredCard.target_y = Settings.HEIGHT / 2.0F;
+        this.hoveredCard.render(sb);
+        this.hoveredCard.updateHoverLogic();
+        this.hoveredCard.renderCardTip(sb);
+
+
+        this.upgradePreviewCard.current_x = Settings.WIDTH * 0.63F;
+        this.upgradePreviewCard.current_y = Settings.HEIGHT / 2.0F;
+        this.upgradePreviewCard.target_x = Settings.WIDTH * 0.63F;
+        this.upgradePreviewCard.target_y = Settings.HEIGHT / 2.0F;
+        this.upgradePreviewCard.render(sb);
+        this.upgradePreviewCard.updateHoverLogic();
+        this.upgradePreviewCard.renderCardTip(sb);
+      } else {
+
+        this.hoveredCard.current_x = Settings.WIDTH / 2.0F;
+        this.hoveredCard.current_y = Settings.HEIGHT / 2.0F;
+        this.hoveredCard.render(sb);
+        this.hoveredCard.updateHoverLogic();
+      }
+
+      if(this.forPurge || this.forUpgrade){
+        String msg = TEXT[14] + KakaMinionManager.getInstance().getKakaSmithCardCost(this.kakaDogTag, this.hoveredCard);
+        FontHelper.renderSmartText(sb, FontHelper.buttonLabelFont, msg, Settings.WIDTH * 0.5F, Settings.HEIGHT * 0.3F,
+                10000.0F, 34.8F * Settings.scale, Settings.CREAM_COLOR);
+      }
+    }
+
+    if (!PeekButton.isPeeking && (
+            this.forUpgrade || this.forTransform || this.forPurge || this.forPreview || this.isJustForConfirming || this.anyNumber || this.forClarity || this.forPreview)) {
+      this.confirmButton.render(sb);
+    }
+    this.cancelButton.render(sb);
+
+    if ((!this.isJustForConfirming || this.targetGroup.size() > 5) && !PeekButton.isPeeking) {
+      FontHelper.renderDeckViewTip(sb, this.tipMsg, 96.0F * Settings.scale, Settings.CREAM_COLOR);
+    }
+
+    for(SBMGeneralToggleButton t : this.toggles){
+      t.render(sb);
+    }
+  }
+
+  // ----------------------------------------
+  // Toggle utility
+  // ----------------------------------------
+  private void createToggles() {
+    this.toggles = new SBMGeneralToggleButton[2];
+    // preview
+    this.toggles[0] = new SBMGeneralToggleButton(
+            KAKA_STAT_START_X + TOGGLE_DX * 0,
+            KAKA_STAT_START_Y + TOGGLE_DY,
+            0,
+            TEXT[4],
+            (btn, enabled) -> {
+              if (!this.confirmScreenUp && btn.enabled) {
+                resetOnToggle();
+                this.forPreview = true;
+                btn.enabled = true;
+                resetTargetGroup();
+                return;
+              }
+              // cancel toggle op
+              btn.enabled = !btn.enabled;
+            }
+    );
+    this.toggles[0].enabled = this.forPreview;
+
+    // upgrade
+    this.toggles[1] = new SBMGeneralToggleButton(
+            KAKA_STAT_START_X + TOGGLE_DX * 1,
+            KAKA_STAT_START_Y + TOGGLE_DY,
+            0,
+            TEXT[7],
+            (btn, enabled) -> {
+              if (!this.confirmScreenUp && btn.enabled) {
+                resetOnToggle();
+                this.forUpgrade = true;
+                btn.enabled = true;
+                resetTargetGroup();
+                return;
+              }
+              // cancel toggle op
+              btn.enabled = !btn.enabled;
+            }
+    );
+    this.toggles[1].enabled = this.forUpgrade;
+  }
+
+  private void resetOnToggle(){
+    if(!this.confirmScreenUp) {
+      this.forPreview = false;
+      this.forUpgrade = false;
+      this.forPurge = false;
+
+      for (AbstractCard c : this.selectedCards)
+        c.stopGlowing();
+      if(this.hoveredCard != null)
+        this.hoveredCard.stopGlowing();
+
+      for (SBMGeneralToggleButton t : this.toggles)
+        t.enabled = false;
+
+      this.selectedCards.clear();
+      this.cardSelectAmount = 0;
+      this.hoveredCard = null;
+    }
+  }
+
+  private void resetTargetGroup(){
+    if(this.forUpgrade){
+      this.targetGroup = this.kakaDogTag.kakaDeck.getUpgradableCards();
+    }
+    else if(this.forPreview){
+      this.targetGroup = this.kakaDogTag.kakaDeck;
+    }
+    else if(this.forPurge){
+      this.targetGroup = this.kakaDogTag.kakaDeck;
+    }
+  }
+
+  // ----------------------------------------
+  // Helpers
+  // ----------------------------------------
+  private boolean canKakaSmithCard(AbstractCard card){
+    return KakaMinionManager.getInstance().canKakaSmithCard(kakaDogTag, card);
+  }
+
+  private void renderKakaStat(SpriteBatch sb){
+    String msg = TEXT[9] + kakaDogTag.kakaData.name;
+    msg += TEXT[10] + kakaDogTag.kakaData.level;
+    msg += TEXT[11] + kakaDogTag.kakaData.currentHealth + TEXT[12] + kakaDogTag.kakaData.maxHealth;
+    msg += TEXT[13] + kakaDogTag.kakaData.upgradePoint;
+    FontHelper.renderSmartText(sb, FontHelper.tipBodyFont, msg, KAKA_STAT_START_X, KAKA_STAT_START_Y,
+            10000.0F, 34.8F * Settings.scale, Settings.CREAM_COLOR);
   }
 
   private void closeSelf(){
@@ -511,68 +783,6 @@ public class KakaStatScreen
     }
   }
 
-  public void open(CardGroup group, int numCards, boolean anyNumber, String msg) {
-    open(group, numCards, msg, false, false, true, false);
-
-    this.anyNumber = anyNumber;
-    this.forClarity = !anyNumber;
-    this.confirmButton.hideInstantly();
-    this.confirmButton.show();
-    this.confirmButton.updateText(TEXT[0]);
-    this.confirmButton.isDisabled = !anyNumber;
-  }
-
-
-  public void openForKaka(KakaDogTag kakaDogTag) {
-    StarBreakerMod.logger.info("Open Kaka Stat:" + kakaDogTag.name + ", " + kakaDogTag.kakaData.upgradePoint);
-    this.kakaDogTag = kakaDogTag;
-    if (kakaDogTag.kakaData.upgradePoint > 0) {
-      open(kakaDogTag.kakaDeck, 1, TEXT[6], true, false, false, false);
-      this.forPreview = false;
-    } else {
-      open(kakaDogTag.kakaDeck, 1, TEXT[5], false, false, true, false);
-      this.forPreview = true;
-      this.cancelButton.isDisabled = false;
-      this.cancelButton.show();
-    }
-  }
-
-  public void open(CardGroup group, int numCards, String tipMsg, boolean forUpgrade, boolean forTransform, boolean canCancel, boolean forPurge) {
-    this.targetGroup = group;
-    callOnOpen();
-
-
-    this.forUpgrade = forUpgrade;
-    this.forTransform = forTransform;
-    this.canCancel = canCancel;
-    this.forPurge = forPurge;
-    this.tipMsg = tipMsg;
-    this.numCards = numCards;
-
-    if ((forUpgrade || forTransform || forPurge || AbstractDungeon.previousScreen == AbstractDungeon.CurrentScreen.SHOP) && canCancel) {
-      this.cancelButton.show();
-    }
-
-    if (!canCancel) {
-      this.cancelButton.hide();
-    }
-
-    final float SHOW_X = 256.0F * Settings.scale;
-    final float DRAW_Y = 128.0F * Settings.scale;
-    this.cancelButton.updateText(TEXT[1]);
-
-    calculateScrollBounds();
-  }
-
-  public void open(CardGroup group, int numCards, String tipMsg, boolean forUpgrade, boolean forRitual) {
-    open(group, numCards, tipMsg, forUpgrade, forRitual, true, false);
-  }
-
-  public void open(CardGroup group, int numCards, String tipMsg, boolean forUpgrade) {
-    open(group, numCards, tipMsg, forUpgrade, false);
-  }
-
-
   public void openConfirmationGrid(CardGroup group, String tipMsg) {
     this.targetGroup = group;
     callOnOpen();
@@ -587,7 +797,7 @@ public class KakaStatScreen
 
     this.confirmButton.show();
     this.confirmButton.updateText(TEXT[0]);
-    this.confirmButton.isDisabled = false;
+    this.confirmButton.isDisabled = !canKakaSmithCard(this.hoveredCard);
 
     this.canCancel = false;
 
@@ -629,6 +839,7 @@ public class KakaStatScreen
     } else {
       drawStartY = Settings.HEIGHT * 0.66F;
     }
+
   }
 
   public void reopen() {
@@ -772,78 +983,6 @@ public class KakaStatScreen
 
     this.tipMsg = this.lastTip;
   }
-
-  public void render(SpriteBatch sb) {
-    if (shouldShowScrollBar()) {
-      this.scrollBar.render(sb);
-    }
-
-    if (!PeekButton.isPeeking) {
-      if (this.hoveredCard != null) {
-        if ((AbstractDungeon.getCurrRoom()).phase == AbstractRoom.RoomPhase.COMBAT) {
-          this.targetGroup.renderExceptOneCard(sb, this.hoveredCard);
-        } else {
-          this.targetGroup.renderExceptOneCardShowBottled(sb, this.hoveredCard);
-        }
-
-        this.hoveredCard.renderHoverShadow(sb);
-        this.hoveredCard.render(sb);
-
-        if ((AbstractDungeon.getCurrRoom()).phase != AbstractRoom.RoomPhase.COMBAT) {
-          // handle bottles
-        }
-        this.hoveredCard.renderCardTip(sb);
-      } else if ((AbstractDungeon.getCurrRoom()).phase == AbstractRoom.RoomPhase.COMBAT) {
-        this.targetGroup.render(sb);
-      } else {
-        this.targetGroup.renderShowBottled(sb);
-      }
-    }
-
-
-    if (this.confirmScreenUp) {
-      sb.setColor(new Color(0.0F, 0.0F, 0.0F, 0.8F));
-      sb.draw(ImageMaster.WHITE_SQUARE_IMG, 0.0F, 0.0F, Settings.WIDTH, Settings.HEIGHT - 64.0F * Settings.scale);
-
-      if (this.forTransform || this.forUpgrade) {
-        renderArrows(sb);
-
-        this.hoveredCard.current_x = Settings.WIDTH * 0.36F;
-        this.hoveredCard.current_y = Settings.HEIGHT / 2.0F;
-        this.hoveredCard.target_x = Settings.WIDTH * 0.36F;
-        this.hoveredCard.target_y = Settings.HEIGHT / 2.0F;
-        this.hoveredCard.render(sb);
-        this.hoveredCard.updateHoverLogic();
-        this.hoveredCard.renderCardTip(sb);
-
-
-        this.upgradePreviewCard.current_x = Settings.WIDTH * 0.63F;
-        this.upgradePreviewCard.current_y = Settings.HEIGHT / 2.0F;
-        this.upgradePreviewCard.target_x = Settings.WIDTH * 0.63F;
-        this.upgradePreviewCard.target_y = Settings.HEIGHT / 2.0F;
-        this.upgradePreviewCard.render(sb);
-        this.upgradePreviewCard.updateHoverLogic();
-        this.upgradePreviewCard.renderCardTip(sb);
-      } else {
-
-        this.hoveredCard.current_x = Settings.WIDTH / 2.0F;
-        this.hoveredCard.current_y = Settings.HEIGHT / 2.0F;
-        this.hoveredCard.render(sb);
-        this.hoveredCard.updateHoverLogic();
-      }
-    }
-
-    if (!PeekButton.isPeeking && (
-            this.forUpgrade || this.forTransform || this.forPurge || this.forPreview || this.isJustForConfirming || this.anyNumber || this.forClarity || this.forPreview)) {
-      this.confirmButton.render(sb);
-    }
-    this.cancelButton.render(sb);
-
-    if ((!this.isJustForConfirming || this.targetGroup.size() > 5) && !PeekButton.isPeeking) {
-      FontHelper.renderDeckViewTip(sb, this.tipMsg, 96.0F * Settings.scale, Settings.CREAM_COLOR);
-    }
-  }
-
 
   private void renderArrows(SpriteBatch sb) {
     float x = Settings.WIDTH / 2.0F - 73.0F * Settings.scale - 32.0F;

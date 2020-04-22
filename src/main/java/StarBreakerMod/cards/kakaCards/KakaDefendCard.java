@@ -1,6 +1,7 @@
 package StarBreakerMod.cards.kakaCards;
 
 import StarBreakerMod.minions.BaseFriendlyKaka;
+import StarBreakerMod.patches.AbstractCardEnumPatches;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.GainBlockAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -15,7 +16,7 @@ public class KakaDefendCard extends KakaPlayableCard {
     private static final CardStrings cardStrings = CardCrawlGame.languagePack.getCardStrings("Defend_R"); public static final String ID = "StarBreaker:KakaDefendCard";
 
     public KakaDefendCard() {
-        super("StarBreaker:KakaDefendCard", cardStrings.NAME, new RegionName("red/skill/defend"), 1, cardStrings.DESCRIPTION, AbstractCard.CardType.SKILL, AbstractCard.CardColor.RED, AbstractCard.CardRarity.BASIC, AbstractCard.CardTarget.SELF);
+        super("StarBreaker:KakaDefendCard", cardStrings.NAME, new RegionName("red/skill/defend"), 1, cardStrings.DESCRIPTION, AbstractCard.CardType.SKILL, AbstractCardEnumPatches.SBM_KAKA_BLUE, AbstractCard.CardRarity.BASIC, AbstractCard.CardTarget.SELF);
 
         this.kakaCardType = KakaCardType.Hand_OptDefensive;
         this.baseBlock = 5;

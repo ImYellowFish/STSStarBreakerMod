@@ -1,6 +1,7 @@
 package StarBreakerMod.cards.kakaCards;
 
 import StarBreakerMod.minions.BaseFriendlyKaka;
+import StarBreakerMod.patches.AbstractCardEnumPatches;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.AbstractCreature;
@@ -13,7 +14,7 @@ public class KakaStatDrawCard extends KakaPlayableCard {
     public static final String ID = "StarBreaker:KakaStatDrawCard";
 
     public KakaStatDrawCard(int initDraw, int timesUpgraded){
-        super(ID, cardStrings.NAME, new RegionName("green/skill/reflex"), -2, cardStrings.DESCRIPTION, AbstractCard.CardType.POWER, AbstractCard.CardColor.BLUE, AbstractCard.CardRarity.BASIC, AbstractCard.CardTarget.SELF);
+        super(ID, cardStrings.NAME, new RegionName("green/skill/reflex"), -2, cardStrings.DESCRIPTION, AbstractCard.CardType.POWER, AbstractCardEnumPatches.SBM_KAKA_BLUE, AbstractCard.CardRarity.BASIC, AbstractCard.CardTarget.SELF);
         this.kakaCardType = KakaCardType.BaseStat_Draw;
         this.magicNumber = this.baseMagicNumber = initDraw + timesUpgraded;
         this.timesUpgraded = timesUpgraded;
@@ -44,5 +45,9 @@ public class KakaStatDrawCard extends KakaPlayableCard {
 
     public AbstractCard makeCopy() {
         return new KakaStatDrawCard(this.magicNumber - this.timesUpgraded, this.timesUpgraded);
+    }
+
+    public boolean canUpgrade() {
+        return true;
     }
 }

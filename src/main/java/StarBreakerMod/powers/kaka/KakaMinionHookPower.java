@@ -1,4 +1,4 @@
- package StarBreakerMod.powers;
+ package StarBreakerMod.powers.kaka;
  
  import StarBreakerMod.minions.system.KakaMinionManager;
  import com.evacipated.cardcrawl.mod.stslib.powers.interfaces.InvisiblePower;
@@ -6,6 +6,7 @@
  import com.megacrit.cardcrawl.cards.DamageInfo;
  import com.megacrit.cardcrawl.characters.AbstractPlayer;
  import com.megacrit.cardcrawl.core.AbstractCreature;
+ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
  import com.megacrit.cardcrawl.powers.AbstractPower;
 
  // Not visible, used to provide some hooks to the KakaMinionManager
@@ -25,6 +26,21 @@
      }
 
      public boolean onPlayerDeath(AbstractPlayer player, DamageInfo damageInfo){
-        return KakaMinionManager.getInstance(player).onPlayerDeath(damageInfo);
+         if(isOwnerPlayer()) {
+             return KakaMinionManager.getInstance(player).onPlayerDeath(damageInfo);
+         }
+
+         // todo block damage for player
+         return false;
+     }
+
+
+     public void onAttack(DamageInfo info, int damageAmount, AbstractCreature target) {
+         KakaMinionManager.getInstance(AbstractDungeon.player).addAggro(
+                 this.owner, damageAmount * KakaMinionManager.AGGRO_PER_DAMAGE);
+     }
+
+     private boolean isOwnerPlayer(){
+         return AbstractDungeon.player == this.owner;
      }
  }

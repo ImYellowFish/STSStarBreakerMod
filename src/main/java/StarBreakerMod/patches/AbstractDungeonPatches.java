@@ -14,6 +14,8 @@ import com.megacrit.cardcrawl.saveAndContinue.SaveFile;
 public class AbstractDungeonPatches {
     @SpireEnum
     public static AbstractDungeon.CurrentScreen SBM_KakaStat;
+    @SpireEnum
+    public static AbstractDungeon.CurrentScreen SBM_KakaDebug;
 
     @SpirePatch(
             cls = "com.megacrit.cardcrawl.dungeons.AbstractDungeon",
@@ -24,6 +26,9 @@ public class AbstractDungeonPatches {
         public static void Postfix(AbstractDungeon _instance) {
             if(_instance.screen == SBM_KakaStat){
                 KakaMinionManager.getKakaStatScreen().update();
+            }
+            else if(_instance.screen == SBM_KakaDebug){
+                KakaMinionManager.getKakaDebugScreen().update();
             }
         }
     }
@@ -38,6 +43,9 @@ public class AbstractDungeonPatches {
         public static void Postfix(AbstractDungeon _instance, SpriteBatch sb) {
             if(_instance.screen == SBM_KakaStat){
                 KakaMinionManager.getKakaStatScreen().render(sb);
+            }
+            else if(_instance.screen == SBM_KakaDebug){
+                KakaMinionManager.getKakaDebugScreen().render(sb);
             }
         }
     }

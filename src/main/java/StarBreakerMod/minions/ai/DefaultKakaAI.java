@@ -7,11 +7,13 @@ import StarBreakerMod.cards.kakaCards.KakaStatEnergyCard;
 import StarBreakerMod.minions.system.KakaMinionManager;
 import StarBreakerMod.minions.BaseFriendlyKaka;
 import StarBreakerMod.relics.KakaDogTag;
+import StarBreakerMod.rewards.KakaSingleCardReward;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.rewards.RewardItem;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
 
 
@@ -54,6 +56,8 @@ public class DefaultKakaAI extends AbstractKakaAI {
 
     public static final int FIRST_KEY_CARD_DROP_CHANCE = 50;
     public static final int KEY_CARD_DROP_CHANCE = 25;
+
+    public static final int ENERGY_CARD_DROP_CHANCE = 25;
 
     // ----------------------------------------
     // Interfaces
@@ -156,29 +160,53 @@ public class DefaultKakaAI extends AbstractKakaAI {
     }
 
     public void onVictory() {
-        dropTraitsReward();
-        if (dropSpecialAIReward()) {
-            return;
-        }
-        dropCardReward();
     }
+
+
+    public RewardItem getRandomDrops(){
+        KakaMinionManager mgr = KakaMinionManager.getInstance();
+        int roll = mgr.cardRandomRng.random(100);
+        if(roll < CARD_DROP_CHANCE){
+            return dropRandomCardReward();
+        }
+        return null;
+    }
+
+    public void onCardRemovedFromBattle(AbstractCard c){
+        tryRemoveCardFromPile(c, keyPowerCardPile);
+        tryRemoveCardFromPile(c, keyDefensiveCardPile);
+        tryRemoveCardFromPile(c, keyOffensiveCardPile);
+        tryRemoveCardFromPile(c, optionalPowerCardPile);
+        tryRemoveCardFromPile(c, optionalDefensiveCardPile);
+        tryRemoveCardFromPile(c, optionalOffensiveCardPile);
+        tryRemoveCardFromPile(c, energyCardPile);
+    }
+
 
     // ----------------------------------------
     // Reward drops
     // ----------------------------------------
-    public boolean dropSpecialAIReward() {
-        return false;
-    }
-
-    public boolean dropTraitsReward() {
-        return false;
-    }
-
-    public boolean dropCardReward() {
+    public RewardItem dropRandomCardReward(){
         KakaMinionManager mgr = KakaMinionManager.getInstance();
-        return false;
-    }
+        AbstractCard result = null;
 
+        int roll = mgr.cardRandomRng.random(100);
+
+        int keyCardDropChance = KEY_CARD_DROP_CHANCE;
+        if(!hasAnyKeyCard()){
+            keyCardDropChance = FIRST_KEY_CARD_DROP_CHANCE;
+        }
+        if(roll < keyCardDropChance){
+            return new KakaSingleCardReward(this.dogTag, mgr.kakaRewardFactory.getRandomKeyCardDrop());
+        }
+
+        roll = mgr.cardRandomRng.random(100);
+        if(roll < ENERGY_CARD_DROP_CHANCE){
+            return new KakaSingleCardReward(this.dogTag, mgr.kakaRewardFactory.getRandomEnergyCardDrop());
+        }
+
+        return new KakaSingleCardReward(this.dogTag, mgr.kakaRewardFactory.getRandomOptionalCardDrop());
+    }
 
     // ----------------------------------------
     // AI utilities
@@ -208,6 +236,10 @@ public class DefaultKakaAI extends AbstractKakaAI {
                 }
             }
         }
+    }
+
+    public void tryRemoveCardFromPile(AbstractCard c, CardGroup pile){
+        pile.removeCard(c);
     }
 
 
@@ -257,6 +289,18 @@ public class DefaultKakaAI extends AbstractKakaAI {
             this.intentEnergy = this.intentEnergy - card.costForTurn + card.energyGain;
         }
         this.intentCardsInHand = this.intentCardsInHand - 1 + card.cardDrawGain;
+    }
+
+    public boolean hasAnyKeyCard(){
+        for(AbstractCard card : dogTag.kakaDeck.group) {
+            KakaPlayableCard c = (KakaPlayableCard)card;
+            if(c.kakaCardType == KakaPlayableCard.KakaCardType.Hand_KeyDefensive ||
+                    c.kakaCardType == KakaPlayableCard.KakaCardType.Hand_KeyOffensive ||
+                    c.kakaCardType == KakaPlayableCard.KakaCardType.Hand_KeyPower){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void intializeCardPiles() {

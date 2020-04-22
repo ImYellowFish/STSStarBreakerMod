@@ -8,6 +8,7 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.rewards.RewardItem;
 
 
 public abstract class AbstractKakaAI {
@@ -33,6 +34,10 @@ public abstract class AbstractKakaAI {
     public abstract void onKakaUpgrade();
 
     public abstract void onVictory();
+
+    public abstract RewardItem getRandomDrops();
+
+    public abstract void onCardRemovedFromBattle(AbstractCard c);
 
     // ----------------------------------------
     // Helpers

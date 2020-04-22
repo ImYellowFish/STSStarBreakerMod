@@ -6,4 +6,7 @@ import com.megacrit.cardcrawl.rewards.RewardItem;
 public class RewardTypePatches {
     @SpireEnum
     public static RewardItem.RewardType SBM_NEW_KAKA;
+
+    @SpireEnum
+    public static RewardItem.RewardType SBM_NEW_KAKA_CARD;
 }

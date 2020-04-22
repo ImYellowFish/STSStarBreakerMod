@@ -1,6 +1,7 @@
 package StarBreakerMod.cards.kakaCards;
 
 import StarBreakerMod.minions.BaseFriendlyKaka;
+import StarBreakerMod.patches.AbstractCardEnumPatches;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.DamageAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -16,7 +17,7 @@ public class KakaStrikeCard extends KakaPlayableCard {
     private static final CardStrings cardStrings = CardCrawlGame.languagePack.getCardStrings("Strike_R"); public static final String ID = "StarBreaker:KakaStrikeCard";
 
     public KakaStrikeCard() {
-        super("StarBreaker:KakaStrikeCard", cardStrings.NAME, new RegionName("red/attack/strike"), 1, cardStrings.DESCRIPTION, AbstractCard.CardType.ATTACK, AbstractCard.CardColor.RED, AbstractCard.CardRarity.BASIC, AbstractCard.CardTarget.ENEMY);
+        super("StarBreaker:KakaStrikeCard", cardStrings.NAME, new RegionName("red/attack/strike"), 1, cardStrings.DESCRIPTION, AbstractCard.CardType.ATTACK, AbstractCardEnumPatches.SBM_KAKA_BLUE, AbstractCard.CardRarity.BASIC, AbstractCard.CardTarget.ENEMY);
 
         this.kakaCardType = KakaCardType.Hand_OptOffensive;
         this.baseDamage = 6;
