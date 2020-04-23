@@ -44,5 +44,11 @@
 	"StarBreaker:KakaStatDrawCard": {
 		"NAME": "Base Draw",
 		"DESCRIPTION": "Draw !M! cards at the start of your turn."
+	},
+
+	"StarBreaker:RitualForm": {
+		"NAME": "Ritual Form",
+		"DESCRIPTION": "At the start of your turn, gain !M! Strength."
 	}
+
 }

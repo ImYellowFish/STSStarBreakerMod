@@ -624,7 +624,7 @@ public class KakaStatScreen
             10000.0F, 34.8F * Settings.scale, Settings.CREAM_COLOR);
   }
 
-  private void closeSelf(){
+  public void closeSelf(){
     // Hack, so the black screen can be cleaned up in AbstractDungeon
     AbstractDungeon.screen = AbstractDungeon.CurrentScreen.GRID;
     AbstractDungeon.closeCurrentScreen();

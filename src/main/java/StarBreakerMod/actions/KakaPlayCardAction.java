@@ -15,26 +15,34 @@
 
  public class KakaPlayCardAction
    extends AbstractGameAction {
-     private AbstractPlayer p;
-     private AbstractCard card;
+     public AbstractPlayer p;
+     public AbstractCard card;
+     private boolean useCopy;
 
      public KakaPlayCardAction(BaseFriendlyKaka kaka, AbstractCreature target, AbstractCard card) {
          setValues(target, kaka, -1);
          this.actionType = AbstractGameAction.ActionType.SPECIAL;
          this.card = card;
          this.duration = Settings.ACTION_DUR_MED;
+         this.useCopy = true;
+     }
+
+     public KakaPlayCardAction(BaseFriendlyKaka kaka, AbstractCreature target, AbstractCard card, boolean useCopy) {
+         setValues(target, kaka, -1);
+         this.actionType = AbstractGameAction.ActionType.SPECIAL;
+         this.card = card;
+         this.duration = Settings.ACTION_DUR_MED;
+         this.useCopy = useCopy;
      }
 
      public void update() {
          if (this.duration == Settings.ACTION_DUR_MED) {
              BaseFriendlyKaka kaka = (BaseFriendlyKaka) this.source;
-             if (this.target != null && this.target instanceof AbstractMonster) {
-                 ((KakaPlayableCard) card).calculateKakaCardDamage(kaka, (AbstractMonster) target);
-             }
+             ((KakaPlayableCard) card).calculateKakaCardDamage(kaka, (AbstractMonster) target);
 
              // add play card animation
              addToBot((AbstractGameAction) new AnimateSlowAttackAction((AbstractCreature) kaka));
-             addToBot((AbstractGameAction) new KakaShowCardAction(kaka, this.card));
+             addToBot((AbstractGameAction) new KakaShowCardAction(kaka, this.card, this.useCopy));
 
 
              // play the card
@@ -47,9 +55,10 @@
              }
 
              // call on play card power
-             for(AbstractPower power : kaka.powers){
-                 if(power instanceof AbstractKakaMinionPower){
-                    ((AbstractKakaMinionPower) power).onKakaUseCard(this.card, this);
+             for(AbstractPower power : kaka.powers) {
+                 StarBreakerMod.logger.info("power onKakaUseCard:" + card + "," + power + "," + power.ID);
+                 if (power instanceof AbstractKakaMinionPower) {
+                     ((AbstractKakaMinionPower) power).onKakaUseCard(this.card, this);
                  }
              }
 

@@ -42,6 +42,6 @@
      }
 
      public void atEndOfTurn(boolean isPlayer) {
-         addToBot((AbstractGameAction) new RemoveSpecificPowerAction(this.owner, this.owner, "Rage"));
+         addToBot((AbstractGameAction) new RemoveSpecificPowerAction(this.owner, this.owner, "KakaMinionRagePower"));
      }
  }

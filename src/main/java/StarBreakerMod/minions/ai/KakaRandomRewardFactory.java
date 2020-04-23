@@ -22,15 +22,21 @@ public class KakaRandomRewardFactory {
 
     // todo: drop link cards
     public AbstractCard getRandomKeyCardDrop() {
-        return this.keyCardPool.getRandomCard(KakaMinionManager.getInstance().cardRandomRng);
+        if (!this.keyCardPool.isEmpty())
+            return this.keyCardPool.getRandomCard(KakaMinionManager.getInstance().cardRandomRng).makeCopy();
+        return null;
     }
 
     public AbstractCard getRandomEnergyCardDrop() {
-        return this.energyCardPool.getRandomCard(KakaMinionManager.getInstance().cardRandomRng);
+        if (!this.energyCardPool.isEmpty())
+            return this.energyCardPool.getRandomCard(KakaMinionManager.getInstance().cardRandomRng).makeCopy();
+        return null;
     }
 
     public AbstractCard getRandomOptionalCardDrop() {
-        return this.optionalCardPool.getRandomCard(KakaMinionManager.getInstance().cardRandomRng);
+        if (!this.optionalCardPool.isEmpty())
+            return this.optionalCardPool.getRandomCard(KakaMinionManager.getInstance().cardRandomRng).makeCopy();
+        return null;
     }
 
     public void initialize() {

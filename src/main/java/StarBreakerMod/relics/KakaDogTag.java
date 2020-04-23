@@ -6,6 +6,7 @@
  import StarBreakerMod.minions.BaseFriendlyKaka;
  import StarBreakerMod.minions.ai.AbstractKakaAI;
  import StarBreakerMod.minions.system.KakaMinionData;
+ import StarBreakerMod.patches.AbstractDungeonPatches;
  import basemod.abstracts.CustomRelic;
  import basemod.abstracts.CustomSavable;
  import com.evacipated.cardcrawl.mod.stslib.relics.ClickableRelic;
@@ -16,6 +17,7 @@
  import com.megacrit.cardcrawl.helpers.CardLibrary;
  import com.megacrit.cardcrawl.helpers.PowerTip;
  import com.megacrit.cardcrawl.relics.AbstractRelic;
+ import com.megacrit.cardcrawl.vfx.AbstractGameEffect;
 
  public class KakaDogTag extends CustomRelic implements ClickableRelic, CustomSavable<KakaMinionData> {
      public static final String ID = "StarBreaker:KakaDogTag";
@@ -84,9 +86,15 @@
      // Test
      public void onRightClick() {
          // TODO change to effect
-         if(!AbstractDungeon.isScreenUp) {
-             AbstractDungeon.effectList.add(new KakaStatScreenEffect(this));
+         if(AbstractDungeon.isScreenUp && AbstractDungeon.screen == AbstractDungeonPatches.SBM_KakaStat) {
+             for(AbstractGameEffect ge : AbstractDungeon.effectList){
+                 if(ge instanceof KakaStatScreenEffect){
+                     ge.isDone = true;
+                 }
+             }
+             KakaMinionManager.getKakaStatScreen().closeSelf();
          }
+         AbstractDungeon.effectList.add(new KakaStatScreenEffect(this));
      }
 
      public void SpawnKaka() {

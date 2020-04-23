@@ -1,5 +1,6 @@
 package StarBreakerMod.rewards;
 
+import StarBreakerMod.effects.KakaShowCardAndObtainEffect;
 import StarBreakerMod.patches.RewardTypePatches;
 import StarBreakerMod.relics.KakaDogTag;
 import basemod.abstracts.CustomCard;
@@ -34,7 +35,7 @@ public class KakaSingleCardReward extends CustomReward {
 
         // Obtain kaka card
         this.dogTag.kakaDeck.addToBottom(this.card);
-        AbstractDungeon.effectList.add(new ShowCardAndObtainEffect(
+        AbstractDungeon.effectList.add(new KakaShowCardAndObtainEffect(
                 this.card, Settings.WIDTH / 2.0F, Settings.HEIGHT / 2.0F));
 
         return true;

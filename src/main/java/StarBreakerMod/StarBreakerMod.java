@@ -131,6 +131,30 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
         BaseMod.addCard(new KakaSearingBlowCard());
         UnlockTracker.unlockCard(KakaSearingBlowCard.ID);
 
+        BaseMod.addCard(new KakaDoubleTapCard());
+        UnlockTracker.unlockCard(KakaDoubleTapCard.ID);
+
+        BaseMod.addCard(new KakaEchoFormCard());
+        UnlockTracker.unlockCard(KakaEchoFormCard.ID);
+
+        BaseMod.addCard(new KakaRitualFormCard());
+        UnlockTracker.unlockCard(KakaRitualFormCard.ID);
+
+        BaseMod.addCard(new KakaInFlameCard());
+        UnlockTracker.unlockCard(KakaInFlameCard.ID);
+
+        BaseMod.addCard(new KakaLimitBreakCard());
+        UnlockTracker.unlockCard(KakaLimitBreakCard.ID);
+
+        BaseMod.addCard(new KakaSwordBoomerangCard());
+        UnlockTracker.unlockCard(KakaSwordBoomerangCard.ID);
+
+        BaseMod.addCard(new KakaRiddleWithHolesCard());
+        UnlockTracker.unlockCard(KakaRiddleWithHolesCard.ID);
+
+        BaseMod.addCard(new KakaRagnarokCard());
+        UnlockTracker.unlockCard(KakaRagnarokCard.ID);
+
         // Add kaka cards to reward drop pool
         KakaMinionManager.getInstance().kakaRewardFactory.initialize();
     }

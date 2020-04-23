@@ -35,6 +35,7 @@ public class DefaultKakaAI extends AbstractKakaAI {
     // changes at start of turn, shows how kaka will move this turn
     public CardGroup intentPile;
     public CardGroup intentBottomPile;
+    public int intentPileIndex = 0;
 
     private int intentEnergy;
     private int intentCardsInHand;
@@ -78,6 +79,7 @@ public class DefaultKakaAI extends AbstractKakaAI {
     public void createIntent() {
         intentPile.clear();
         intentBottomPile.clear();
+        intentPileIndex = 0;
 
         KakaMinionManager mgr = KakaMinionManager.getInstance();
         BaseFriendlyKaka kaka = GetOwner();
@@ -102,6 +104,12 @@ public class DefaultKakaAI extends AbstractKakaAI {
 
             // then we go through optional defensive cards, play as many as possible
             planThroughCardPiles(optionalDefensiveCardPile, intentPile, 100);
+
+            // then we go through offensive cards
+            planThroughCardPiles(optionalPowerCardPile, intentPile, NEXT_POWER_CARD_CHANCE);
+            planThroughCardPiles(optionalOffensiveCardPile, intentPile, 100);
+            planThroughCardPiles(keyOffensiveCardPile, intentBottomPile, NEXT_KEY_CARD_CHANCE);
+
         } else {
             planThroughCardPiles(keyOffensiveCardPile, intentBottomPile, NEXT_KEY_CARD_CHANCE);
 
@@ -123,27 +131,12 @@ public class DefaultKakaAI extends AbstractKakaAI {
         if (this.intentPile.isEmpty())
             return;
         StarBreakerMod.logger.info(owner.name + "_kaka play cards:" + this.intentPile);
-        // play all cards in intent pile
-        for (AbstractCard card : this.intentPile.group) {
-            // choose target
-            AbstractMonster target = null;
-            if (card.target == AbstractCard.CardTarget.ENEMY) {
-                target = getRandomMonsterTarget();
-            }
-
-            // play card
-            KakaMinionManager.getInstance().playCard(card, owner, target);
-
-            // update energy and draw
-            owner.energy = owner.energy - card.costForTurn + ((KakaPlayableCard)card).energyGain;
-            owner.cardsInHand = owner.cardsInHand - 1 + + ((KakaPlayableCard)card).cardDrawGain;
-        }
-
+        playNextCardInIntentPile();
     }
 
     public void postKakaPlayCard(AbstractCreature target, AbstractCard card) {
         // TODO: play next card
-
+        playNextCardInIntentPile();
     }
 
     public void onKakaUpgrade() {
@@ -180,6 +173,30 @@ public class DefaultKakaAI extends AbstractKakaAI {
         tryRemoveCardFromPile(c, optionalDefensiveCardPile);
         tryRemoveCardFromPile(c, optionalOffensiveCardPile);
         tryRemoveCardFromPile(c, energyCardPile);
+    }
+
+
+    public void playNextCardInIntentPile(){
+        int index = this.intentPile.group.size() - 1 - this.intentPileIndex;
+        this.intentPileIndex++;
+
+        if(index >= this.intentPile.group.size() || index < 0)
+            return;
+        BaseFriendlyKaka owner = GetOwner();
+        KakaPlayableCard card = (KakaPlayableCard)this.intentPile.group.get(index);
+        // choose target
+        AbstractMonster target = null;
+        if (card.target == AbstractCard.CardTarget.ENEMY) {
+            target = getRandomMonsterTarget();
+        }
+
+        // play card
+        card.energyOnUse = owner.energy;
+        KakaMinionManager.getInstance().playCard(card, owner, target);
+
+        // update energy and draw
+        owner.energy = owner.energy - card.costForTurn + ((KakaPlayableCard)card).energyGain;
+        owner.cardsInHand = owner.cardsInHand - 1 + + ((KakaPlayableCard)card).cardDrawGain;
     }
 
 
@@ -239,7 +256,10 @@ public class DefaultKakaAI extends AbstractKakaAI {
     }
 
     public void tryRemoveCardFromPile(AbstractCard c, CardGroup pile){
-        pile.removeCard(c);
+        if(pile.contains(c)) {
+            StarBreakerMod.logger.info("Remove card from kaka pile:" + c);
+            pile.removeCard(c);
+        }
     }
 
 

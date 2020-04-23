@@ -41,11 +41,13 @@ import com.megacrit.cardcrawl.monsters.MonsterGroup;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.random.Random;
 import com.megacrit.cardcrawl.rewards.RewardItem;
+import com.megacrit.cardcrawl.rooms.AbstractRoom;
 import com.megacrit.cardcrawl.rooms.MonsterRoom;
 import com.megacrit.cardcrawl.vfx.SpeechBubble;
 import com.megacrit.cardcrawl.vfx.TextAboveCreatureEffect;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -198,7 +200,10 @@ public class KakaMinionManager{
         }
 
         // drop random cards and traits
-        for(KakaDogTag dogTag : this.dogTags){
+        ArrayList<KakaDogTag> randomOrderDogTags = new ArrayList<>();
+        randomOrderDogTags.addAll(this.dogTags);
+        Collections.shuffle(randomOrderDogTags, new java.util.Random(this.cardRandomRng.randomLong()));
+        for(KakaDogTag dogTag : randomOrderDogTags){
             RewardItem reward = dogTag.kakaAI.getRandomDrops();
             if(reward != null){
                 AbstractDungeon.getCurrRoom().rewards.add(reward);
@@ -231,6 +236,9 @@ public class KakaMinionManager{
         StarBreakerMod.logger.info(AbstractDungeon.player);
         StarBreakerMod.logger.info(this.aggroTarget == (AbstractCreature) AbstractDungeon.player);
         StarBreakerMod.logger.info(info.base);
+        if(AbstractDungeon.getCurrRoom().phase != AbstractRoom.RoomPhase.COMBAT){
+            return true;
+        }
         if((this.aggroTarget == null) || (this.aggroTarget instanceof AbstractPlayer))
             return true;
         if(info.type != DamageInfo.DamageType.NORMAL)

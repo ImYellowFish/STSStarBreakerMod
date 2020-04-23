@@ -40,6 +40,8 @@
 
      public void update() {
          KakaStatScreen screen = KakaMinionManager.getKakaStatScreen();
+         if(this.isDone)
+             return;
 
          if (!AbstractDungeon.isScreenUp) {
              this.duration -= Gdx.graphics.getDeltaTime();

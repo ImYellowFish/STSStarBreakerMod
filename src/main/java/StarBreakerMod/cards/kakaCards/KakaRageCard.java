@@ -25,7 +25,7 @@ public class KakaRageCard extends KakaPlayableCard {
     public KakaRageCard() {
         super(ID, cardStrings.NAME, "red/skill/rage", 0, cardStrings.DESCRIPTION, AbstractCard.CardType.SKILL, AbstractCardEnumPatches.SBM_KAKA_BLUE, AbstractCard.CardRarity.UNCOMMON, AbstractCard.CardTarget.SELF);
 
-        this.kakaCardType = KakaCardType.Hand_OptDefensive;
+        this.kakaCardType = KakaCardType.Hand_OptOffensive;
         this.baseMagicNumber = 3;
         this.magicNumber = this.baseMagicNumber;
     }
@@ -34,7 +34,7 @@ public class KakaRageCard extends KakaPlayableCard {
     public void use(AbstractPlayer p, AbstractMonster m) {
         addToBot((AbstractGameAction) new SFXAction("RAGE"));
         addToBot((AbstractGameAction) new VFXAction((AbstractCreature) p, (AbstractGameEffect) new ShockWaveEffect(p.hb.cX, p.hb.cY, Color.ORANGE, ShockWaveEffect.ShockWaveType.CHAOTIC), 1.0F));
-        addToBot((AbstractGameAction) new ApplyPowerAction((AbstractCreature) p, (AbstractCreature) p, (AbstractPower) new RagePower((AbstractCreature) p, this.magicNumber), this.magicNumber));
+        addToBot((AbstractGameAction) new ApplyPowerAction((AbstractCreature) p, (AbstractCreature) p, (AbstractPower) new KakaRagePower((AbstractCreature) p, this.magicNumber), this.magicNumber));
     }
 
 
