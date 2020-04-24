@@ -12,6 +12,7 @@
    extends AbstractGameAction {
      private AbstractCard theCard;
      private boolean useCopy;
+     private boolean forceExhaustVFX;
 
      public KakaShowCardAction(AbstractCreature kaka, AbstractCard card) {
          setValues((AbstractCreature) kaka, kaka, -1);
@@ -21,12 +22,13 @@
          this.useCopy = true;
      }
 
-     public KakaShowCardAction(AbstractCreature kaka, AbstractCard card, boolean useCopy) {
+     public KakaShowCardAction(AbstractCreature kaka, AbstractCard card, boolean useCopy, boolean forceExhaustVFX) {
          setValues((AbstractCreature) kaka, kaka, -1);
          this.actionType = AbstractGameAction.ActionType.SPECIAL;
          this.theCard = card;
          this.duration = Settings.ACTION_DUR_MED;
          this.useCopy = useCopy;
+         this.forceExhaustVFX = forceExhaustVFX;
      }
 
      public void update() {
@@ -38,7 +40,7 @@
                  c = this.theCard;
              }
              AbstractDungeon.topLevelEffectsQueue.add(new ShowCardBrieflyEffect(c));
-             if(this.theCard.exhaust){
+             if(this.theCard.exhaust || this.forceExhaustVFX){
                  AbstractDungeon.topLevelEffectsQueue.add(new ExhaustCardEffect(c));
              }
          }

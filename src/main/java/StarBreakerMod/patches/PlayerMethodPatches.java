@@ -10,6 +10,7 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.rooms.AbstractRoom;
 
 public class PlayerMethodPatches {
 
@@ -145,6 +146,16 @@ public class PlayerMethodPatches {
             if(_instance instanceof AbstractPlayer) {
                 KakaMinionManager.getInstance((AbstractPlayer) _instance).onPlayerApplyEndOfTurnTriggers();
             }
+        }
+    }
+
+    @SpirePatch(
+            cls = "com.megacrit.cardcrawl.rooms.AbstractRoom",
+            method = "endTurn"
+    )
+    public static class RoomEndTurnPatch{
+        public static void Postfix(AbstractRoom _instance) {
+            KakaMinionManager.getInstance().onRoomEndTurn();
         }
     }
 

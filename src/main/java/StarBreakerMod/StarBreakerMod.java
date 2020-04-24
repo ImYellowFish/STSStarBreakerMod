@@ -110,6 +110,7 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
         UnlockTracker.unlockCard(ClashMasteryCard.ID);
 
         // Kaka cards
+        // Base
         BaseMod.addCard(new KakaStatEnergyCard(0,0));
         UnlockTracker.unlockCard(KakaStatEnergyCard.ID);
 
@@ -122,18 +123,40 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
         BaseMod.addCard(new KakaDefendCard());
         UnlockTracker.unlockCard(KakaDefendCard.ID);
 
+        // Attacks
         BaseMod.addCard(new KakaClashCard());
         UnlockTracker.unlockCard(KakaClashCard.ID);
 
-        BaseMod.addCard(new KakaRageCard());
-        UnlockTracker.unlockCard(KakaRageCard.ID);
+        BaseMod.addCard(new KakaRampageCard());
+        UnlockTracker.unlockCard(KakaRampageCard.ID);
 
         BaseMod.addCard(new KakaSearingBlowCard());
         UnlockTracker.unlockCard(KakaSearingBlowCard.ID);
 
+        BaseMod.addCard(new KakaCarnageCard());
+        UnlockTracker.unlockCard(KakaCarnageCard.ID);
+
+        BaseMod.addCard(new KakaBludgeonCard());
+        UnlockTracker.unlockCard(KakaBludgeonCard.ID);
+
+        BaseMod.addCard(new KakaImmolateCard());
+        UnlockTracker.unlockCard(KakaImmolateCard.ID);
+
+        BaseMod.addCard(new KakaBackstabCard());
+        UnlockTracker.unlockCard(KakaBackstabCard.ID);
+
+        // Weak attacks
+        BaseMod.addCard(new KakaConsecrateCard());
+        UnlockTracker.unlockCard(KakaConsecrateCard.ID);
+
+        // Opt attacks
+        BaseMod.addCard(new KakaRageCard());
+        UnlockTracker.unlockCard(KakaRageCard.ID);
+
         BaseMod.addCard(new KakaDoubleTapCard());
         UnlockTracker.unlockCard(KakaDoubleTapCard.ID);
 
+        // Power
         BaseMod.addCard(new KakaEchoFormCard());
         UnlockTracker.unlockCard(KakaEchoFormCard.ID);
 
@@ -142,6 +165,10 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
 
         BaseMod.addCard(new KakaInFlameCard());
         UnlockTracker.unlockCard(KakaInFlameCard.ID);
+
+        // Strength
+        BaseMod.addCard(new KakaFlexCard());
+        UnlockTracker.unlockCard(KakaFlexCard.ID);
 
         BaseMod.addCard(new KakaLimitBreakCard());
         UnlockTracker.unlockCard(KakaLimitBreakCard.ID);
@@ -154,6 +181,28 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
 
         BaseMod.addCard(new KakaRagnarokCard());
         UnlockTracker.unlockCard(KakaRagnarokCard.ID);
+
+        BaseMod.addCard(new KakaWhirlwindCard());
+        UnlockTracker.unlockCard(KakaWhirlwindCard.ID);
+
+        BaseMod.addCard(new KakaWreathOfFlameCard());
+        UnlockTracker.unlockCard(KakaWreathOfFlameCard.ID);
+
+        // Energy
+        BaseMod.addCard(new KakaAdrenalineCard());
+        UnlockTracker.unlockCard(KakaAdrenalineCard.ID);
+
+        BaseMod.addCard(new KakaOfferingCard());
+        UnlockTracker.unlockCard(KakaOfferingCard.ID);
+
+        BaseMod.addCard(new KakaBloodLettingCard());
+        UnlockTracker.unlockCard(KakaBloodLettingCard.ID);
+
+        BaseMod.addCard(new KakaTurboCard());
+        UnlockTracker.unlockCard(KakaTurboCard.ID);
+
+        BaseMod.addCard(new KakaDeusExMachinaCard());
+        UnlockTracker.unlockCard(KakaDeusExMachinaCard.ID);
 
         // Add kaka cards to reward drop pool
         KakaMinionManager.getInstance().kakaRewardFactory.initialize();

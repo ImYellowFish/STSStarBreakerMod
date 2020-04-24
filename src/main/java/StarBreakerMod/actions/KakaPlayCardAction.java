@@ -42,7 +42,7 @@
 
              // add play card animation
              addToBot((AbstractGameAction) new AnimateSlowAttackAction((AbstractCreature) kaka));
-             addToBot((AbstractGameAction) new KakaShowCardAction(kaka, this.card, this.useCopy));
+             addToBot((AbstractGameAction) new KakaShowCardAction(kaka, this.card, this.useCopy, false));
 
 
              // play the card

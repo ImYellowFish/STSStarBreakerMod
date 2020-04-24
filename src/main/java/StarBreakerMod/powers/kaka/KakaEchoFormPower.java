@@ -44,7 +44,8 @@
      }
 
      public void onKakaUseCard(AbstractCard card, KakaPlayCardAction action) {
-         if (!card.purgeOnUse && this.amount > 0 && AbstractDungeon.actionManager.cardsPlayedThisTurn.size() - this.cardsDoubledThisTurn <= this.amount) {
+         int cardPlayedThisTurn = ((BaseFriendlyKaka)this.owner).AI.getCardPlayedThisTurn();
+         if (!card.purgeOnUse && this.amount > 0 && cardPlayedThisTurn - this.cardsDoubledThisTurn <= this.amount) {
 
              this.cardsDoubledThisTurn++;
              flash();

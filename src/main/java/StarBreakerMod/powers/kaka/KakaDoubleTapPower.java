@@ -74,7 +74,7 @@
          }
      }
 
-     public void atEndOfTurn(boolean isPlayer) {
+     public void onKakaEndTurn() {
          addToBot((AbstractGameAction) new RemoveSpecificPowerAction(this.owner, this.owner, "KakaDoubleTapPower"));
      }
  }

@@ -1,6 +1,7 @@
 package StarBreakerMod.minions.ai;
 
 import StarBreakerMod.StarBreakerMod;
+import StarBreakerMod.actions.KakaShowCardAction;
 import StarBreakerMod.cards.kakaCards.KakaPlayableCard;
 import StarBreakerMod.cards.kakaCards.KakaStatDrawCard;
 import StarBreakerMod.cards.kakaCards.KakaStatEnergyCard;
@@ -8,6 +9,7 @@ import StarBreakerMod.minions.system.KakaMinionManager;
 import StarBreakerMod.minions.BaseFriendlyKaka;
 import StarBreakerMod.relics.KakaDogTag;
 import StarBreakerMod.rewards.KakaSingleCardReward;
+import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
 import com.megacrit.cardcrawl.core.AbstractCreature;
@@ -15,6 +17,8 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.rewards.RewardItem;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
+
+import java.util.ArrayList;
 
 
 public class DefaultKakaAI extends AbstractKakaAI {
@@ -35,7 +39,7 @@ public class DefaultKakaAI extends AbstractKakaAI {
     // changes at start of turn, shows how kaka will move this turn
     public CardGroup intentPile;
     public CardGroup intentBottomPile;
-    public int intentPileIndex = 0;
+    public int cardPlayedThisTurn = 0;
 
     private int intentEnergy;
     private int intentCardsInHand;
@@ -79,7 +83,7 @@ public class DefaultKakaAI extends AbstractKakaAI {
     public void createIntent() {
         intentPile.clear();
         intentBottomPile.clear();
-        intentPileIndex = 0;
+        cardPlayedThisTurn = 0;
 
         KakaMinionManager mgr = KakaMinionManager.getInstance();
         BaseFriendlyKaka kaka = GetOwner();
@@ -128,8 +132,6 @@ public class DefaultKakaAI extends AbstractKakaAI {
 
     public void onKakaTakeTurn() {
         BaseFriendlyKaka owner = GetOwner();
-        if (this.intentPile.isEmpty())
-            return;
         StarBreakerMod.logger.info(owner.name + "_kaka play cards:" + this.intentPile);
         playNextCardInIntentPile();
     }
@@ -177,11 +179,15 @@ public class DefaultKakaAI extends AbstractKakaAI {
 
 
     public void playNextCardInIntentPile(){
-        int index = this.intentPile.group.size() - 1 - this.intentPileIndex;
-        this.intentPileIndex++;
+        int index = this.intentPile.group.size() - 1 - this.cardPlayedThisTurn;
+        this.cardPlayedThisTurn++;
 
-        if(index >= this.intentPile.group.size() || index < 0)
+        if(index >= this.intentPile.group.size() || index < 0) {
+            tryRemoveAllUnplayedEtherealCards();
+            KakaMinionManager.getInstance().onKakaFinishedPlayingCards(this.GetOwner());
             return;
+        }
+
         BaseFriendlyKaka owner = GetOwner();
         KakaPlayableCard card = (KakaPlayableCard)this.intentPile.group.get(index);
         // choose target
@@ -199,6 +205,9 @@ public class DefaultKakaAI extends AbstractKakaAI {
         owner.cardsInHand = owner.cardsInHand - 1 + + ((KakaPlayableCard)card).cardDrawGain;
     }
 
+    public int getCardPlayedThisTurn(){
+        return cardPlayedThisTurn;
+    }
 
     // ----------------------------------------
     // Reward drops
@@ -241,6 +250,12 @@ public class DefaultKakaAI extends AbstractKakaAI {
                 resultPile.addToBottom(c);
                 updateIntentEnergyAndCardDrawAfterPlayCard(c);
 
+                if(c.costForTurn == -1){
+                    // X cost card
+                    // always stop
+                    break;
+                }
+
                 if ((c.energyGain - c.costForTurn) >= 0 && c.cardDrawGain > 0) {
                     // this is a free card
                     // always look for next card
@@ -258,6 +273,32 @@ public class DefaultKakaAI extends AbstractKakaAI {
     public void tryRemoveCardFromPile(AbstractCard c, CardGroup pile){
         if(pile.contains(c)) {
             StarBreakerMod.logger.info("Remove card from kaka pile:" + c);
+            pile.removeCard(c);
+        }
+    }
+
+    public void tryRemoveAllUnplayedEtherealCards() {
+        tryRemoveEtherealCards(keyPowerCardPile);
+        tryRemoveEtherealCards(keyDefensiveCardPile);
+        tryRemoveEtherealCards(keyOffensiveCardPile);
+        tryRemoveEtherealCards(optionalPowerCardPile);
+        tryRemoveEtherealCards(optionalDefensiveCardPile);
+        tryRemoveEtherealCards(optionalOffensiveCardPile);
+        tryRemoveEtherealCards(energyCardPile);
+    }
+
+    public void tryRemoveEtherealCards(CardGroup pile){
+        ArrayList<AbstractCard> toRemove = new ArrayList<>();
+        for(AbstractCard c : pile.group){
+            if(c.isEthereal && !this.intentPile.contains(c)){
+                AbstractDungeon.actionManager.addToBottom(
+                        (AbstractGameAction) new KakaShowCardAction(
+                                this.GetOwner(), c, true, true));
+                toRemove.add(c);
+            }
+        }
+
+        for(AbstractCard c : toRemove){
             pile.removeCard(c);
         }
     }
@@ -296,6 +337,9 @@ public class DefaultKakaAI extends AbstractKakaAI {
 
     public boolean predictCanPlayCard(KakaPlayableCard card) {
         // also works for X cards.
+        if(card.cost == -1){
+            return this.intentCardsInHand > 0;
+        }
         return this.intentCardsInHand > 0 && card.costForTurn <= this.intentEnergy;
     }
 
@@ -305,7 +349,11 @@ public class DefaultKakaAI extends AbstractKakaAI {
             // Always reserve 2 energy if possible, but when playing, may spend more energy.
             int predictedCost = Math.min(ENERGY_RESERVED_FOR_X, this.intentEnergy);
             this.intentEnergy = this.intentEnergy - predictedCost + card.energyGain;
-        } else {
+        }
+        else if(card.costForTurn == -2){
+            this.intentEnergy = this.intentEnergy + card.energyGain;
+        }
+        else {
             this.intentEnergy = this.intentEnergy - card.costForTurn + card.energyGain;
         }
         this.intentCardsInHand = this.intentCardsInHand - 1 + card.cardDrawGain;
@@ -344,7 +392,7 @@ public class DefaultKakaAI extends AbstractKakaAI {
             if (!(card instanceof KakaPlayableCard)) {
                 continue;
             }
-            KakaPlayableCard c = (KakaPlayableCard) card;
+            KakaPlayableCard c = (KakaPlayableCard) card.makeSameInstanceOf();
             switch (c.kakaCardType) {
                 case BaseStat_Energy:
                     this.baseStatEnergyCard = c;

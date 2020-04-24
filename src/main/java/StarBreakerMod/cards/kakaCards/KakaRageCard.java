@@ -37,6 +37,13 @@ public class KakaRageCard extends KakaPlayableCard {
         addToBot((AbstractGameAction) new ApplyPowerAction((AbstractCreature) p, (AbstractCreature) p, (AbstractPower) new KakaRagePower((AbstractCreature) p, this.magicNumber), this.magicNumber));
     }
 
+    @Override
+    public void OnKakaUseCard(BaseFriendlyKaka p, AbstractCreature m) {
+        addToBot((AbstractGameAction) new SFXAction("RAGE"));
+        addToBot((AbstractGameAction) new VFXAction((AbstractCreature) p, (AbstractGameEffect) new ShockWaveEffect(p.hb.cX, p.hb.cY, Color.ORANGE, ShockWaveEffect.ShockWaveType.CHAOTIC), 1.0F));
+        addToBot((AbstractGameAction) new ApplyPowerAction((AbstractCreature) p, (AbstractCreature) p, (AbstractPower) new KakaRagePower((AbstractCreature) p, this.magicNumber), this.magicNumber));
+
+    }
 
     public void upgrade() {
         if (!this.upgraded) {
@@ -50,11 +57,4 @@ public class KakaRageCard extends KakaPlayableCard {
         return new KakaRageCard();
     }
 
-    @Override
-    public void OnKakaUseCard(BaseFriendlyKaka p, AbstractCreature m) {
-        addToBot((AbstractGameAction) new SFXAction("RAGE"));
-        addToBot((AbstractGameAction) new VFXAction((AbstractCreature) p, (AbstractGameEffect) new ShockWaveEffect(p.hb.cX, p.hb.cY, Color.ORANGE, ShockWaveEffect.ShockWaveType.CHAOTIC), 1.0F));
-        addToBot((AbstractGameAction) new ApplyPowerAction((AbstractCreature) p, (AbstractCreature) p, (AbstractPower) new KakaRagePower((AbstractCreature) p, this.magicNumber), this.magicNumber));
-
-    }
 }

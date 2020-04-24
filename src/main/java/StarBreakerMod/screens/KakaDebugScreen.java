@@ -74,6 +74,16 @@ public class KakaDebugScreen {
       }
     });
 
+    this.addButton("HealKaka", (btn) -> {
+      if(KakaMinionManager.getInstance().dogTags.size() > 0){
+        KakaDogTag dogTag = KakaMinionManager.getInstance().dogTags.get(0);
+        dogTag.kakaData.currentHealth = dogTag.kakaData.maxHealth;
+        if(dogTag.kaka != null){
+          dogTag.kaka.heal(100);
+        }
+      }
+    });
+
     this.addButton("AddStrDeck", (btn) -> {
       if(KakaMinionManager.getInstance().dogTags.size() > 0){
         KakaDogTag dogTag = KakaMinionManager.getInstance().dogTags.get(0);
@@ -100,6 +110,30 @@ public class KakaDebugScreen {
         dogTag.kakaDeck.addToBottom(new KakaClashCard());
         dogTag.kakaDeck.addToBottom(new KakaClashCard());
         dogTag.kakaDeck.addToBottom(new KakaRageCard());
+        dogTag.kakaDeck.addToBottom(new KakaDoubleTapCard());
+      }
+    });
+
+    this.addButton("AddWhirlWindDeck", (btn) -> {
+      if(KakaMinionManager.getInstance().dogTags.size() > 0){
+        KakaDogTag dogTag = KakaMinionManager.getInstance().dogTags.get(0);
+        dogTag.kakaDeck.addToBottom(new KakaWhirlwindCard());
+        dogTag.kakaDeck.addToBottom(new KakaAdrenalineCard());
+        dogTag.kakaDeck.addToBottom(new KakaBloodLettingCard());
+        dogTag.kakaDeck.addToBottom(new KakaOfferingCard());
+        dogTag.kakaDeck.addToBottom(new KakaDeusExMachinaCard());
+        dogTag.kakaDeck.addToBottom(new KakaTurboCard());
+      }
+    });
+
+    this.addButton("AddEtherealDeck", (btn) -> {
+      if(KakaMinionManager.getInstance().dogTags.size() > 0){
+        KakaDogTag dogTag = KakaMinionManager.getInstance().dogTags.get(0);
+        dogTag.kakaDeck.addToBottom(new KakaCarnageCard());
+        dogTag.kakaDeck.addToBottom(new KakaRampageCard());
+        dogTag.kakaDeck.addToBottom(new KakaCarnageCard());
+        dogTag.kakaDeck.addToBottom(new KakaCarnageCard());
+        dogTag.kakaDeck.addToBottom(new KakaImmolateCard());
       }
     });
 

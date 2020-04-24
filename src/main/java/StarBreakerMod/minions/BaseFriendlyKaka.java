@@ -6,6 +6,7 @@ import StarBreakerMod.cards.kakaCards.KakaPlayableCard;
 import StarBreakerMod.minions.ai.AbstractKakaAI;
 import StarBreakerMod.minions.system.KakaMinionData;
 import StarBreakerMod.minions.system.KakaMinionManager;
+import StarBreakerMod.powers.kaka.AbstractKakaMinionPower;
 import StarBreakerMod.relics.KakaDogTag;
 import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.spine.AnimationState;
@@ -21,6 +22,7 @@ import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.powers.AbstractPower;
 
 public class BaseFriendlyKaka extends AbstractFriendlyMonster {
     public static final String NAME = "BaseFriendlyKaka";
@@ -92,6 +94,8 @@ public class BaseFriendlyKaka extends AbstractFriendlyMonster {
     public void takeTurn() {
         if (!this.isDead)
             this.AI.onKakaTakeTurn();
+        else
+            KakaMinionManager.getInstance().onKakaFinishedPlayingCards(this);
     }
 
     public void die(){
@@ -121,7 +125,16 @@ public class BaseFriendlyKaka extends AbstractFriendlyMonster {
             c.resetAttributes();
         }
         this.AI.updateEnergyAndDrawOnTurnStart();
+
+        // Apply kaka powers on turn start
+        for(AbstractPower p : this.powers){
+            if(p instanceof AbstractKakaMinionPower){
+                ((AbstractKakaMinionPower) p).onKakaStartTurnPostDraw();
+            }
+        }
+
         this.AI.createIntent();
+
     }
 
     // ----------------------------------------

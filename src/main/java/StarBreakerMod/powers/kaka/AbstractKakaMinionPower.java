@@ -15,4 +15,10 @@
  public class AbstractKakaMinionPower extends AbstractPower {
      public void onKakaUseCard(AbstractCard card, KakaPlayCardAction action) {
      }
+
+     public void onKakaStartTurnPostDraw(){
+     }
+
+     public void onKakaEndTurn(){
+     }
  }

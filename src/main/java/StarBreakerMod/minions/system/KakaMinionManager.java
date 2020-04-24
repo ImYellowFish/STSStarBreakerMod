@@ -13,6 +13,7 @@ import StarBreakerMod.minions.ai.AbstractKakaAI;
 import StarBreakerMod.minions.ai.KakaAIFactory;
 import StarBreakerMod.minions.ai.KakaRandomRewardFactory;
 import StarBreakerMod.patches.AbstractDungeonAddFieldsPatches;
+import StarBreakerMod.powers.kaka.AbstractKakaMinionPower;
 import StarBreakerMod.powers.kaka.KakaMinionAggroPower;
 import StarBreakerMod.powers.kaka.KakaMinionHookPower;
 import StarBreakerMod.powers.kaka.KakaMinionMiscPower;
@@ -24,10 +25,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
-import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
-import com.megacrit.cardcrawl.actions.common.DamageAction;
-import com.megacrit.cardcrawl.actions.common.RemoveSpecificPowerAction;
+import com.megacrit.cardcrawl.actions.common.*;
 import com.megacrit.cardcrawl.actions.utility.TextAboveCreatureAction;
+import com.megacrit.cardcrawl.actions.utility.WaitAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
 import com.megacrit.cardcrawl.cards.DamageInfo;
@@ -75,8 +75,8 @@ public class KakaMinionManager{
     // ----------------------------------------
     // Constant values
     // ----------------------------------------
-    public static final int INIT_ENERGY_PER_TURN = 2;
-    public static final int INIT_DRAW_PER_TURN = 2;
+    public static final int INIT_ENERGY_PER_TURN = 1;
+    public static final int INIT_DRAW_PER_TURN = 1;
     public static final int INIT_MAX_HEALTH = 20;
 
     public static final int AGGRO_PER_DAMAGE = 1;
@@ -98,6 +98,9 @@ public class KakaMinionManager{
     public int maxAggro;
     public AbstractCreature maxAggroTarget;
     public int playerAggro;
+
+    // AI
+    public int kakaTurnFinishedCount = 0;
 
 
     // ----------------------------------------
@@ -263,6 +266,8 @@ public class KakaMinionManager{
 
     public void onPlayerApplyEndOfTurnTriggers(){
         StarBreakerMod.logger.info("----------- Minion Before Attacking --------------");
+        this.kakaTurnFinishedCount = 0;
+
         ArrayList<AbstractMonster> kakaList = this.battleKakaGroup.monsters;
         // TODO: use action for play card, fix orders
         kakaList.forEach(AbstractMonster::takeTurn);
@@ -270,6 +275,15 @@ public class KakaMinionManager{
         kakaList.forEach(monster -> {
             monster.powers.forEach(AbstractPower::atEndOfRound);
         });
+    }
+
+    public void onRoomEndTurn(){
+        ArrayList<AbstractMonster> kakaList = this.battleKakaGroup.monsters;
+        if(kakaList.size() > 0) {
+            // Remove MonsterTurn action
+            StarBreakerMod.logger.info("actions" + AbstractDungeon.actionManager.actions);
+            AbstractDungeon.actionManager.actions.remove(AbstractDungeon.actionManager.actions.size() - 1);
+        }
     }
 
     public void onPlayerApplyTurnPowers(){
@@ -485,6 +499,36 @@ public class KakaMinionManager{
 
     public void replaceKakaAI(KakaDogTag dogTag, KakaAIFactory.KakaAIType aiType){
         // TODO
+    }
+
+    public void onKakaFinishedPlayingCards(BaseFriendlyKaka kaka){
+        this.kakaTurnFinishedCount++;
+        StarBreakerMod.logger.info("onKakaFinishedPlayingCards" + kaka.kakaData.name + "," + this.kakaTurnFinishedCount);
+
+        // Apply power endOfTurn
+        for(AbstractPower p : kaka.powers){
+            if(p instanceof AbstractKakaMinionPower){
+                ((AbstractKakaMinionPower) p).onKakaEndTurn();
+            }
+        }
+
+        // After all kaka finished, invoke NextTurn action
+        if(this.kakaTurnFinishedCount >= battleKakaGroup.monsters.size()){
+            StarBreakerMod.logger.info("onKakaFinishedPlayingCards, add enemy turn");
+            AbstractDungeon.actionManager.addToBottom(new AbstractGameAction()
+            {
+                public void update() {
+                    addToBot((AbstractGameAction)new EndTurnAction());
+                    addToBot((AbstractGameAction)new WaitAction(1.2F));
+                    if (!AbstractDungeon.getCurrRoom().skipMonsterTurn) {
+                        addToBot((AbstractGameAction)new MonsterStartTurnAction());
+                    }
+                    AbstractDungeon.actionManager.monsterAttacksQueued = false;
+                    this.isDone = true;
+                }
+            });
+            this.kakaTurnFinishedCount = -100;
+        }
     }
 
     // ----------------------------------------

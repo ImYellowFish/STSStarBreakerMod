@@ -40,6 +40,12 @@ public abstract class AbstractKakaAI {
     public abstract void onCardRemovedFromBattle(AbstractCard c);
 
     // ----------------------------------------
+    // Variables
+    // ----------------------------------------
+
+    public abstract int getCardPlayedThisTurn();
+
+    // ----------------------------------------
     // Helpers
     // ----------------------------------------
     public void PlayCard(AbstractCard card, AbstractMonster target) {

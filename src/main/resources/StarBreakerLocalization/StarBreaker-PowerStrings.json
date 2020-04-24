@@ -84,5 +84,21 @@
 		"DESCRIPTIONS": [
 			"Becomes the target of all hostile attacks."
 		]
+	},
+
+	"StarBreaker:KakaDelayVoidPower": {
+		"NAME": "Void",
+		"DESCRIPTIONS": [
+			"On next turn, lose #b",
+			" energy and #b",
+			" card draw"
+		]
+	},
+
+	"StarBreaker:KakaBurnPower": {
+		"NAME": "Burn",
+		"DESCRIPTIONS": [
+			"At the end of your turn, take #b", " damage"
+		]
 	}
 }
