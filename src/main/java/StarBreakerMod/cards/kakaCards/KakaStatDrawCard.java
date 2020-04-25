@@ -16,7 +16,8 @@ public class KakaStatDrawCard extends KakaPlayableCard {
     public KakaStatDrawCard(int initDraw, int timesUpgraded){
         super(ID, cardStrings.NAME, new RegionName("green/skill/reflex"), -2, cardStrings.DESCRIPTION, AbstractCard.CardType.POWER, AbstractCardEnumPatches.SBM_KAKA_BLUE, AbstractCard.CardRarity.BASIC, AbstractCard.CardTarget.SELF);
         this.kakaCardType = KakaCardType.BaseStat_Draw;
-        this.magicNumber = this.baseMagicNumber = initDraw + timesUpgraded;
+        this.baseDamage = 0;
+        this.magicNumber = this.baseMagicNumber = this.baseDamage + timesUpgraded;
         this.timesUpgraded = timesUpgraded;
 
         if(timesUpgraded > 0){
@@ -32,9 +33,11 @@ public class KakaStatDrawCard extends KakaPlayableCard {
     }
 
     public void upgrade() {
-        upgradeMagicNumber(1);
         this.timesUpgraded++;
+        this.baseMagicNumber = this.magicNumber = this.baseDamage + timesUpgraded;
+
         this.upgraded = true;
+        this.upgradedMagicNumber = true;
         this.name = cardStrings.NAME + "+" + this.timesUpgraded;
         initializeTitle();
     }
@@ -44,7 +47,7 @@ public class KakaStatDrawCard extends KakaPlayableCard {
     }
 
     public AbstractCard makeCopy() {
-        return new KakaStatDrawCard(this.magicNumber - this.timesUpgraded, this.timesUpgraded);
+        return new KakaStatDrawCard(this.baseDamage, 0);
     }
 
     public boolean canUpgrade() {

@@ -114,7 +114,7 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
         BaseMod.addCard(new KakaStatEnergyCard(0,0));
         UnlockTracker.unlockCard(KakaStatEnergyCard.ID);
 
-        BaseMod.addCard(new KakaStatDrawCard(1,0));
+        BaseMod.addCard(new KakaStatDrawCard(0,0));
         UnlockTracker.unlockCard(KakaStatDrawCard.ID);
 
         BaseMod.addCard(new KakaStrikeCard());
@@ -149,12 +149,22 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
         BaseMod.addCard(new KakaConsecrateCard());
         UnlockTracker.unlockCard(KakaConsecrateCard.ID);
 
+        BaseMod.addCard(new KakaClawCard());
+        UnlockTracker.unlockCard(KakaClawCard.ID);
+
+        BaseMod.addCard(new KakaBeamCellCard());
+        UnlockTracker.unlockCard(KakaBeamCellCard.ID);
+
+        BaseMod.addCard(new KakaNeutralizeCard());
+        UnlockTracker.unlockCard(KakaNeutralizeCard.ID);
+
         // Opt attacks
         BaseMod.addCard(new KakaRageCard());
         UnlockTracker.unlockCard(KakaRageCard.ID);
 
         BaseMod.addCard(new KakaDoubleTapCard());
         UnlockTracker.unlockCard(KakaDoubleTapCard.ID);
+
 
         // Power
         BaseMod.addCard(new KakaEchoFormCard());
@@ -165,6 +175,9 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
 
         BaseMod.addCard(new KakaInFlameCard());
         UnlockTracker.unlockCard(KakaInFlameCard.ID);
+
+        BaseMod.addCard(new KakaDevaFormCard());
+        UnlockTracker.unlockCard(KakaDevaFormCard.ID);
 
         // Strength
         BaseMod.addCard(new KakaFlexCard());

@@ -4,12 +4,10 @@
  import StarBreakerMod.minions.BaseFriendlyKaka;
  import com.megacrit.cardcrawl.actions.AbstractGameAction;
  import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
- import com.megacrit.cardcrawl.actions.common.DamageAction;
  import com.megacrit.cardcrawl.actions.common.GainBlockAction;
  import com.megacrit.cardcrawl.actions.common.RemoveSpecificPowerAction;
  import com.megacrit.cardcrawl.actions.utility.UseCardAction;
  import com.megacrit.cardcrawl.cards.AbstractCard;
- import com.megacrit.cardcrawl.cards.DamageInfo;
  import com.megacrit.cardcrawl.core.AbstractCreature;
  import com.megacrit.cardcrawl.core.CardCrawlGame;
  import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
@@ -17,36 +15,42 @@
  import com.megacrit.cardcrawl.powers.AbstractPower;
  import com.megacrit.cardcrawl.powers.StrengthPower;
 
- public class KakaBurnPower extends AbstractKakaMinionPower {
-     private static final PowerStrings powerStrings = CardCrawlGame.languagePack.getPowerStrings("StarBreaker:KakaBurnPower");
-     public static final String POWER_ID = "KakaBurnPower";
+ public class KakaDevaFormPower extends AbstractKakaMinionPower {
+     private static final PowerStrings powerStrings = CardCrawlGame.languagePack.getPowerStrings("DevaForm");
+     public static final String POWER_ID = "KakaDevaFormPower";
      public static final String NAME = powerStrings.NAME;
      public static final String[] DESCRIPTIONS = powerStrings.DESCRIPTIONS;
+     private int energyGainAmount = 1;
 
-     public KakaBurnPower(AbstractCreature owner, int newAmount) {
+     public KakaDevaFormPower(AbstractCreature owner, int newAmount) {
          this.name = NAME;
-         this.ID = "KakaBurnPower";
+         this.ID = "KakaDevaFormPower";
          this.owner = owner;
-         this.amount = newAmount;
-         this.type = AbstractPower.PowerType.DEBUFF;
+         this.amount = 1;
+         this.energyGainAmount = 1;
          updateDescription();
-         loadRegion("flameBarrier");
+         loadRegion("deva2");
      }
 
 
      public void updateDescription() {
-         this.description = DESCRIPTIONS[0] + this.amount + DESCRIPTIONS[1];
+         if (this.energyGainAmount == 1) {
+             this.description = DESCRIPTIONS[0] + DESCRIPTIONS[3] + this.amount + DESCRIPTIONS[4];
+         } else {
+             this.description = DESCRIPTIONS[1] + this.energyGainAmount + DESCRIPTIONS[2] + DESCRIPTIONS[3] + this.amount + DESCRIPTIONS[4];
+         }
+     }
+
+     public void stackPower(int stackAmount) {
+         super.stackPower(stackAmount);
+         this.energyGainAmount++;
      }
 
      public void onKakaStartTurnPostDraw() {
          flash();
          BaseFriendlyKaka kaka = (BaseFriendlyKaka)this.owner;
-         kaka.energy -= this.amount;
-         kaka.cardsInHand -= Math.min(this.amount / 2, 2);
-     }
-
-     public void onKakaEndTurn() {
-         flash();
-         addToBot((AbstractGameAction)new DamageAction(this.owner, new DamageInfo(this.owner, this.amount, DamageInfo.DamageType.THORNS), AbstractGameAction.AttackEffect.FIRE));
+         kaka.energy += this.amount;
+         this.energyGainAmount += this.amount;
+         updateDescription();
      }
  }

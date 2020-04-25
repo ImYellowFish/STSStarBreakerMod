@@ -133,7 +133,19 @@ public class KakaDebugScreen {
         dogTag.kakaDeck.addToBottom(new KakaRampageCard());
         dogTag.kakaDeck.addToBottom(new KakaCarnageCard());
         dogTag.kakaDeck.addToBottom(new KakaCarnageCard());
+      }
+    });
+
+    this.addButton("AddZeroEnDeck", (btn) -> {
+      if(KakaMinionManager.getInstance().dogTags.size() > 0){
+        KakaDogTag dogTag = KakaMinionManager.getInstance().dogTags.get(0);
         dogTag.kakaDeck.addToBottom(new KakaImmolateCard());
+        dogTag.kakaDeck.addToBottom(new KakaBackstabCard());
+        dogTag.kakaDeck.addToBottom(new KakaBackstabCard());
+        dogTag.kakaDeck.addToBottom(new KakaConsecrateCard());
+        dogTag.kakaDeck.addToBottom(new KakaClawCard());
+        dogTag.kakaDeck.addToBottom(new KakaClawCard());
+        dogTag.kakaDeck.addToBottom(new KakaNeutralizeCard());
       }
     });
 

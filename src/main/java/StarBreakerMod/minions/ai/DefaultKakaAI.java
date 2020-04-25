@@ -76,6 +76,8 @@ public class DefaultKakaAI extends AbstractKakaAI {
     }
 
     public void updateEnergyAndDrawOnTurnStart() {
+        StarBreakerMod.logger.info("update kaka energy: " + this.baseStatEnergyCard.magicNumber);
+        StarBreakerMod.logger.info("update kaka draw: " + this.baseStatDrawCard.magicNumber);
         this.baseStatEnergyCard.OnKakaUseCard(GetOwner(), null);
         this.baseStatDrawCard.OnKakaUseCard(GetOwner(), null);
     }
@@ -181,6 +183,11 @@ public class DefaultKakaAI extends AbstractKakaAI {
     public void playNextCardInIntentPile(){
         int index = this.intentPile.group.size() - 1 - this.cardPlayedThisTurn;
         this.cardPlayedThisTurn++;
+
+        if(this.GetOwner().isDead){
+            KakaMinionManager.getInstance().onKakaFinishedPlayingCards(this.GetOwner());
+            return;
+        }
 
         if(index >= this.intentPile.group.size() || index < 0) {
             tryRemoveAllUnplayedEtherealCards();

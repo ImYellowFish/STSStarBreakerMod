@@ -620,7 +620,7 @@ public class KakaStatScreen
     msg += TEXT[10] + kakaDogTag.kakaData.level;
     msg += TEXT[11] + kakaDogTag.kakaData.currentHealth + TEXT[12] + kakaDogTag.kakaData.maxHealth;
     msg += TEXT[13] + kakaDogTag.kakaData.upgradePoint;
-    FontHelper.renderSmartText(sb, FontHelper.tipBodyFont, msg, KAKA_STAT_START_X, KAKA_STAT_START_Y,
+    FontHelper.renderSmartText(sb, FontHelper.tipBodyFont, msg, KAKA_STAT_START_X, KAKA_STAT_START_Y + 300,
             10000.0F, 34.8F * Settings.scale, Settings.CREAM_COLOR);
   }
 
