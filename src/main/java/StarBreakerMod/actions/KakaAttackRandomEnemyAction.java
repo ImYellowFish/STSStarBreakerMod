@@ -1,6 +1,6 @@
  package StarBreakerMod.actions;
  
- import StarBreakerMod.cards.kakaCards.KakaPlayableCard;
+ import StarBreakerMod.minions.cards.KakaPlayableCard;
  import StarBreakerMod.minions.BaseFriendlyKaka;
  import StarBreakerMod.minions.system.KakaMinionManager;
  import com.megacrit.cardcrawl.actions.AbstractGameAction;

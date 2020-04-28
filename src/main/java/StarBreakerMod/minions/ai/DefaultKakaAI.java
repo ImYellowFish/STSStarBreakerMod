@@ -2,9 +2,9 @@ package StarBreakerMod.minions.ai;
 
 import StarBreakerMod.StarBreakerMod;
 import StarBreakerMod.actions.KakaShowCardAction;
-import StarBreakerMod.cards.kakaCards.KakaPlayableCard;
-import StarBreakerMod.cards.kakaCards.KakaStatDrawCard;
-import StarBreakerMod.cards.kakaCards.KakaStatEnergyCard;
+import StarBreakerMod.minions.cards.KakaPlayableCard;
+import StarBreakerMod.minions.cards.KakaStatDrawCard;
+import StarBreakerMod.minions.cards.KakaStatEnergyCard;
 import StarBreakerMod.minions.system.KakaMinionManager;
 import StarBreakerMod.minions.BaseFriendlyKaka;
 import StarBreakerMod.relics.KakaDogTag;

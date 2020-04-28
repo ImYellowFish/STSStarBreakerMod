@@ -2,11 +2,11 @@ package StarBreakerMod.minions;
 
 import StarBreakerMod.StarBreakerMod;
 import StarBreakerMod.actions.KakaShowCardAction;
-import StarBreakerMod.cards.kakaCards.KakaPlayableCard;
+import StarBreakerMod.minions.cards.KakaPlayableCard;
 import StarBreakerMod.minions.ai.AbstractKakaAI;
 import StarBreakerMod.minions.system.KakaMinionData;
 import StarBreakerMod.minions.system.KakaMinionManager;
-import StarBreakerMod.powers.kaka.AbstractKakaMinionPower;
+import StarBreakerMod.minions.powers.AbstractKakaMinionPower;
 import StarBreakerMod.relics.KakaDogTag;
 import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.spine.AnimationState;

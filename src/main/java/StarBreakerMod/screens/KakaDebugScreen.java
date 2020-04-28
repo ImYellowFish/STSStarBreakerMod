@@ -1,6 +1,6 @@
 package StarBreakerMod.screens;
 
-import StarBreakerMod.cards.kakaCards.*;
+import StarBreakerMod.minions.cards.*;
 import StarBreakerMod.minions.system.KakaMinionManager;
 import StarBreakerMod.patches.AbstractDungeonPatches;
 import StarBreakerMod.relics.KakaDogTag;

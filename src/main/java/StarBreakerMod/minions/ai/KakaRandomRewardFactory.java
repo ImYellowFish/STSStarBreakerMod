@@ -1,9 +1,7 @@
 package StarBreakerMod.minions.ai;
 
-import StarBreakerMod.StarBreakerMod;
-import StarBreakerMod.cards.kakaCards.KakaPlayableCard;
+import StarBreakerMod.minions.cards.KakaPlayableCard;
 import StarBreakerMod.minions.system.KakaMinionManager;
-import StarBreakerMod.relics.KakaDogTag;
 import basemod.BaseMod;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;

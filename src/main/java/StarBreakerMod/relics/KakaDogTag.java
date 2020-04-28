@@ -1,6 +1,5 @@
  package StarBreakerMod.relics;
  import StarBreakerMod.StarBreakerMod;
- import StarBreakerMod.cards.kakaCards.KakaStrikeCard;
  import StarBreakerMod.effects.KakaStatScreenEffect;
  import StarBreakerMod.minions.system.KakaMinionManager;
  import StarBreakerMod.minions.BaseFriendlyKaka;

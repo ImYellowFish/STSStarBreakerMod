@@ -1,7 +1,7 @@
 package StarBreakerMod;
 
 import StarBreakerMod.cards.*;
-import StarBreakerMod.cards.kakaCards.*;
+import StarBreakerMod.minions.cards.*;
 import StarBreakerMod.events.BountyHunterEvent;
 import StarBreakerMod.events.HadesTrialEvent;
 import StarBreakerMod.minions.system.KakaMinionManager;
