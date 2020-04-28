@@ -109,10 +109,10 @@ public class DefaultKakaAI extends AbstractKakaAI {
             planThroughCardPiles(optionalPowerCardPile, intentPile, NEXT_POWER_CARD_CHANCE);
 
             // then we go through optional defensive cards, play as many as possible
-            planThroughCardPiles(optionalDefensiveCardPile, intentPile, 100);
+            // Opt def cards are played after key defense cards
+            planThroughCardPiles(optionalDefensiveCardPile, intentBottomPile, 100);
 
             // then we go through offensive cards
-            planThroughCardPiles(optionalPowerCardPile, intentPile, NEXT_POWER_CARD_CHANCE);
             planThroughCardPiles(optionalOffensiveCardPile, intentPile, 100);
             planThroughCardPiles(keyOffensiveCardPile, intentBottomPile, NEXT_KEY_CARD_CHANCE);
 
@@ -124,10 +124,15 @@ public class DefaultKakaAI extends AbstractKakaAI {
 
             // then we go through optional defensive cards, play as many as possible
             planThroughCardPiles(optionalOffensiveCardPile, intentPile, 100);
+
+            // then we go through defensive cards
+            planThroughCardPiles(keyDefensiveCardPile, intentBottomPile, NEXT_KEY_CARD_CHANCE);
+            planThroughCardPiles(optionalDefensiveCardPile, intentBottomPile, 100);
         }
 
         // at last, we copy all cards from intentBottomPile to intentPile
-        for (AbstractCard card : intentBottomPile.group) {
+        for (int i = intentBottomPile.group.size() - 1; i >= 0; i--) {
+            AbstractCard card = intentBottomPile.group.get(i);
             intentPile.addToBottom(card);
         }
     }
@@ -161,6 +166,8 @@ public class DefaultKakaAI extends AbstractKakaAI {
 
 
     public RewardItem getRandomDrops(){
+        if(!this.dogTag.kakaData.alive)
+            return null;
         KakaMinionManager mgr = KakaMinionManager.getInstance();
         int roll = mgr.cardRandomRng.random(100);
         if(roll < CARD_DROP_CHANCE){

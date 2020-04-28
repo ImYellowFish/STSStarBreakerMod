@@ -35,7 +35,7 @@ public class KakaImmolateCard extends KakaPlayableCard {
         this.kakaCardType = KakaCardType.Hand_KeyOffensive;
         this.baseDamage = 21;
         this.isMultiDamage = true;
-        this.baseMagicNumber = this.magicNumber = 2;
+        this.baseMagicNumber = this.magicNumber = 1;
         this.cardsToPreview = (AbstractCard)new Burn();
     }
 

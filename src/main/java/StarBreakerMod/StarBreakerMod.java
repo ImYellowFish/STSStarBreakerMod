@@ -21,13 +21,11 @@ import com.megacrit.cardcrawl.dungeons.Exordium;
 import com.megacrit.cardcrawl.dungeons.TheCity;
 import com.megacrit.cardcrawl.helpers.CardHelper;
 import com.megacrit.cardcrawl.helpers.CardLibrary;
-import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.localization.*;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
 import com.megacrit.cardcrawl.monsters.MonsterInfo;
 import com.megacrit.cardcrawl.monsters.city.Healer;
-import com.megacrit.cardcrawl.rewards.RewardItem;
 import com.megacrit.cardcrawl.rewards.RewardSave;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
 import com.megacrit.cardcrawl.unlock.UnlockTracker;
@@ -165,6 +163,28 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
         BaseMod.addCard(new KakaDoubleTapCard());
         UnlockTracker.unlockCard(KakaDoubleTapCard.ID);
 
+        // Key Def
+        BaseMod.addCard(new KakaFlameBarrierCard());
+        UnlockTracker.unlockCard(KakaFlameBarrierCard.ID);
+
+        BaseMod.addCard(new KakaLegSweepCard());
+        UnlockTracker.unlockCard(KakaLegSweepCard.ID);
+
+        BaseMod.addCard(new KakaImperviousCard());
+        UnlockTracker.unlockCard(KakaImperviousCard.ID);
+
+        BaseMod.addCard(new KakaEntrenchCard());
+        UnlockTracker.unlockCard(KakaImperviousCard.ID);
+
+        BaseMod.addCard(new KakaReinforcedBodyCard());
+        UnlockTracker.unlockCard(KakaReinforcedBodyCard.ID);
+
+        // Opt Def
+        BaseMod.addCard(new KakaBootSequenceCard());
+        UnlockTracker.unlockCard(KakaBootSequenceCard.ID);
+
+        BaseMod.addCard(new KakaBodySlamCard());
+        UnlockTracker.unlockCard(KakaBodySlamCard.ID);
 
         // Power
         BaseMod.addCard(new KakaEchoFormCard());
@@ -178,6 +198,25 @@ public class StarBreakerMod implements  PostExhaustSubscriber, PostInitializeSub
 
         BaseMod.addCard(new KakaDevaFormCard());
         UnlockTracker.unlockCard(KakaDevaFormCard.ID);
+
+        BaseMod.addCard(new KakaBarricadeCard());
+        UnlockTracker.unlockCard(KakaBarricadeCard.ID);
+
+        // Poison
+        BaseMod.addCard(new KakaCripplingPoisonCard());
+        UnlockTracker.unlockCard(KakaCripplingPoisonCard.ID);
+
+        BaseMod.addCard(new KakaNoxiousFumesCard());
+        UnlockTracker.unlockCard(KakaNoxiousFumesCard.ID);
+
+        BaseMod.addCard(new KakaEnvenomCard());
+        UnlockTracker.unlockCard(KakaEnvenomCard.ID);
+
+        BaseMod.addCard(new KakaCorpseExplosionCard());
+        UnlockTracker.unlockCard(KakaCorpseExplosionCard.ID);
+
+        BaseMod.addCard(new KakaPoisonedStabCard());
+        UnlockTracker.unlockCard(KakaPoisonedStabCard.ID);
 
         // Strength
         BaseMod.addCard(new KakaFlexCard());

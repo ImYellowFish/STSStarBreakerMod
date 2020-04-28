@@ -2,6 +2,7 @@
  
  import StarBreakerMod.actions.KakaPlayCardAction;
  import StarBreakerMod.minions.BaseFriendlyKaka;
+ import StarBreakerMod.minions.system.KakaMinionManager;
  import com.megacrit.cardcrawl.actions.AbstractGameAction;
  import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
  import com.megacrit.cardcrawl.actions.common.GainBlockAction;
@@ -20,6 +21,7 @@
      public static final String POWER_ID = "KakaDelayVoidPower";
      public static final String NAME = powerStrings.NAME;
      public static final String[] DESCRIPTIONS = powerStrings.DESCRIPTIONS;
+     private int amountInHand = 0;
 
      public KakaDelayVoidPower(AbstractCreature owner, int newAmount) {
          this.name = NAME;
@@ -40,8 +42,11 @@
      public void onKakaStartTurnPostDraw() {
          flash();
          BaseFriendlyKaka kaka = (BaseFriendlyKaka)this.owner;
-         kaka.energy -= this.amount;
-         kaka.cardsInHand -= this.amount;
-         addToBot((AbstractGameAction)new RemoveSpecificPowerAction(this.owner, this.owner, "KakaDelayVoidPower"));
+         amountInHand = KakaMinionManager.getInstance().cardRandomRng.random(this.amount);
+         kaka.energy -= amountInHand;
+         kaka.cardsInHand -= amountInHand;
+         if(amountInHand > 0) {
+             addToBot((AbstractGameAction) new RemoveSpecificPowerAction(this.owner, this.owner, "KakaDelayVoidPower"));
+         }
      }
  }

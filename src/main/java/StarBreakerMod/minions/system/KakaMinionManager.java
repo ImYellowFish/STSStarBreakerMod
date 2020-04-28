@@ -296,7 +296,12 @@ public class KakaMinionManager{
 
     public void onPlayerApplyStartOfTurnPowers(){
         this.battleKakaGroup.monsters.forEach(AbstractCreature::applyStartOfTurnPowers);
-        this.battleKakaGroup.monsters.forEach(AbstractCreature::loseBlock);
+
+        for(AbstractCreature c:this.battleKakaGroup.monsters){
+            if(!c.hasPower("Barricade")) {
+                c.loseBlock();
+            }
+        }
 
         // decide next aggro target
         setNextTurnAggroTarget(this.maxAggroTarget);
